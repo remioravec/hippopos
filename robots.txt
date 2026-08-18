@@ -1,2 +1,12 @@
+# https://hippopos.fr/robots.txt
+# Remplace le fichier actuel (« Disallow: / »), qui interdit tout le site.
+
 User-agent: *
-Disallow: /
+Allow: /
+
+# Rien à masquer au lancement. Les pages légales restent accessibles au crawl :
+# c'est leur balise « noindex » qui les tient hors de l'index, pas ce fichier.
+# Ne jamais bloquer ici une page portant un noindex — Google doit pouvoir lire
+# la balise pour en tenir compte.
+
+Sitemap: https://hippopos.fr/sitemap.xml
