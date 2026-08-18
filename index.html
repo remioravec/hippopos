@@ -3,16 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hippopos — Le logiciel de caisse pensé pour le commerce indépendant</title>
-  <meta
-    name="description"
-    content="Hippopos est un logiciel de caisse tactile conforme NF525, pensé pour les commerces indépendants et les enseignes multi-magasins : encaissement, stock, fidélité et clôtures fiscales, sans matériel imposé."
-  />
+  <title>Logiciel de caisse NF525 pour commerce indépendant et multi-magasins</title>
+  <meta name="description" content="Encaissez, suivez votre stock et clôturez vos journées en conformité NF525. Sur tablette, ordinateur ou votre matériel existant. Essai 14 jours, sans carte bancaire." />
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
-  <link rel="canonical" href="https://www.hippopos.fr/" />
-  <meta name="robots" content="noindex, nofollow" />
+  <link rel="canonical" href="https://hippopos.fr/" />
 
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://hippopos.fr/" />
+  <meta property="og:site_name" content="Hippopos" />
   <meta property="og:title" content="Hippopos — Le logiciel de caisse pensé pour le commerce indépendant" />
   <meta
     property="og:description"
@@ -27,6 +25,139 @@
     rel="stylesheet"
   />
   <link rel="stylesheet" href="styles.css" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://hippopos.fr/#organisation",
+  "name": "Hippopos",
+  "url": "https://hippopos.fr/",
+  "logo": "https://hippopos.fr/assets/hippopos-logo.svg",
+  "description": "Logiciel de caisse conforme NF525 pour le commerce indépendant, du comptoir au multi-magasins.",
+  "slogan": "Le logiciel de caisse pensé pour le commerce indépendant"
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "@id": "https://hippopos.fr/#logiciel",
+  "name": "Hippopos",
+  "applicationCategory": "BusinessApplication",
+  "applicationSubCategory": "Logiciel de caisse",
+  "operatingSystem": "Web",
+  "url": "https://hippopos.fr/",
+  "publisher": {
+    "@id": "https://hippopos.fr/#organisation"
+  },
+  "featureList": [
+    "Caisse tactile, vente à la pièce ou au poids, variantes, codes-barres",
+    "Conformité NF525 : ventes et clôtures chaînées et horodatées",
+    "Gestion de stock et inventaires guidés",
+    "Multi-magasins : catalogue centralisé, stock par magasin, transferts",
+    "Clôtures jour, mois et année, comptage du fond de caisse",
+    "Programme de fidélité : points, carte à tampons ou cashback",
+    "Étiquettes et codes-barres",
+    "Comptes vendeurs et permissions par code PIN",
+    "Tickets imprimés ou envoyés par email"
+  ],
+  "offers": [
+    {
+      "@type": "Offer",
+      "name": "Solo",
+      "price": "29",
+      "priceCurrency": "EUR",
+      "description": "1 magasin, 2 comptes vendeur inclus",
+      "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "29",
+        "priceCurrency": "EUR",
+        "billingIncrement": 1,
+        "unitCode": "MON",
+        "valueAddedTaxIncluded": false
+      }
+    },
+    {
+      "@type": "Offer",
+      "name": "Équipe",
+      "price": "49",
+      "priceCurrency": "EUR",
+      "description": "1 magasin, comptes vendeur illimités",
+      "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "49",
+        "priceCurrency": "EUR",
+        "billingIncrement": 1,
+        "unitCode": "MON",
+        "valueAddedTaxIncluded": false
+      }
+    },
+    {
+      "@type": "Offer",
+      "name": "Multi-magasins",
+      "price": "69",
+      "priceCurrency": "EUR",
+      "description": "Plusieurs adresses, 1er magasin inclus, 39 € HT par magasin supplémentaire",
+      "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "69",
+        "priceCurrency": "EUR",
+        "billingIncrement": 1,
+        "unitCode": "MON",
+        "valueAddedTaxIncluded": false
+      }
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Hippopos est-il conforme à la législation fiscale française ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oui. Chaque vente et chaque clôture est chaînée et horodatée par hachage cryptographique, conformément aux exigences de la norme NF525 sur l'inaltérabilité, la sécurisation, la conservation et l'archivage des données."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Ai-je besoin d'un matériel particulier ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Non. Hippopos fonctionne dans votre navigateur, sur tablette, ordinateur ou terminal tactile. Douchette code-barres, balance et imprimante ticket existantes restent compatibles."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Puis-je gérer plusieurs magasins avec un seul compte ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oui, via la formule Multi-magasins : le catalogue est partagé, mais chaque magasin a son propre stock, sa propre caisse et ses propres clôtures. Le stock peut être transféré d'un magasin à l'autre en deux temps, envoi puis réception."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Que se passe-t-il à la fin des 14 jours d'essai ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Vous choisissez librement de passer à une formule payante ou d'arrêter. Aucune carte bancaire n'est demandée à l'inscription et vos données restent accessibles pour l'export."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Puis-je résilier à tout moment ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oui, sans engagement ni préavis. Votre historique de ventes reste consultable après résiliation."
+      }
+    }
+  ]
+}
+  </script>
 </head>
 <body>
   <header class="site-header">
@@ -35,10 +166,10 @@
         <img src="assets/hippopos-logo.svg" alt="Hippopos" style="height: 40px;" />
       </a>
       <nav class="main-nav">
-        <a href="#fonctionnalites">Fonctionnalités</a>
-        <a href="#multi-magasins">Multi-magasins</a>
-        <a href="#tarifs">Tarifs</a>
-        <a href="#faq">Questions fréquentes</a>
+        <a href="./logiciel-de-caisse/">Métiers</a>
+        <a href="./fonctionnalites/">Fonctionnalités</a>
+        <a href="./nf525/">Conformité NF525</a>
+        <a href="./tarifs/">Tarifs</a>
       </nav>
       <div class="header-actions">
         <a href="https://app.hippopos.fr" class="btn btn-ghost">Se connecter</a>
@@ -56,10 +187,10 @@
       </div>
     </div>
     <nav class="mobile-nav" id="mobileNav">
-      <a href="#fonctionnalites">Fonctionnalités</a>
-      <a href="#multi-magasins">Multi-magasins</a>
-      <a href="#tarifs">Tarifs</a>
-      <a href="#faq">Questions fréquentes</a>
+      <a href="./logiciel-de-caisse/">Métiers</a>
+      <a href="./fonctionnalites/">Fonctionnalités</a>
+      <a href="./nf525/">Conformité NF525</a>
+      <a href="./tarifs/">Tarifs</a>
       <a href="https://app.hippopos.fr">Se connecter</a>
       <a href="https://app.hippopos.fr/inscription" class="btn btn-cta">Essayer gratuitement</a>
     </nav>
@@ -71,7 +202,7 @@
       <div class="container">
         <div class="hero-copy">
           <span class="eyebrow">Conforme NF525</span>
-          <h1>La caisse qui suit votre commerce, <span>du comptoir au multi-magasins</span>.</h1>
+          <h1>Le logiciel de caisse qui suit votre commerce, <span>du comptoir au multi-magasins</span>.</h1>
           <p class="hero-lede">
             Hippopos encaisse, suit votre stock et clôture vos journées en toute conformité — sur tablette,
             ordinateur ou terminal existant. Un seul outil, du premier magasin au réseau.
@@ -152,47 +283,47 @@
         </div>
         <div class="features-grid">
           <div class="feature-card">
-            <div class="feature-icon">🛒</div>
+            <div class="feature-icon" aria-hidden="true">🛒</div>
             <h3>Caisse tactile rapide</h3>
             <p>Vente à la pièce ou au poids, variantes (taille, couleur…), codes-barres, remises et paiements mixtes.</p>
           </div>
           <div class="feature-card">
-            <div class="feature-icon">🔒</div>
+            <div class="feature-icon" aria-hidden="true">🔒</div>
             <h3>Conformité NF525</h3>
             <p>Ventes et clôtures chaînées et horodatées, journaux consultables, archivage inaltérable.</p>
           </div>
           <div class="feature-card">
-            <div class="feature-icon">📦</div>
+            <div class="feature-icon" aria-hidden="true">📦</div>
             <h3>Stock &amp; inventaires</h3>
             <p>Suivi de stock par produit ou variante, inventaires guidés, alertes de rupture en un coup d'œil.</p>
           </div>
           <div class="feature-card">
-            <div class="feature-icon">🏬</div>
+            <div class="feature-icon" aria-hidden="true">🏬</div>
             <h3>Multi-magasins</h3>
             <p>Catalogue centralisé, stock indépendant par magasin, transferts entre magasins en deux temps.</p>
           </div>
           <div class="feature-card">
-            <div class="feature-icon">💳</div>
+            <div class="feature-icon" aria-hidden="true">💳</div>
             <h3>Clôtures &amp; caisse</h3>
             <p>Clôtures jour / mois / année, comptage du fond de caisse, suivi des entrées et sorties d'espèces.</p>
           </div>
           <div class="feature-card">
-            <div class="feature-icon">❤️</div>
+            <div class="feature-icon" aria-hidden="true">❤️</div>
             <h3>Fidélité clients</h3>
             <p>Points, carte à tampons ou cashback : choisissez le programme qui correspond à votre commerce.</p>
           </div>
           <div class="feature-card">
-            <div class="feature-icon">🏷️</div>
+            <div class="feature-icon" aria-hidden="true">🏷️</div>
             <h3>Étiquettes &amp; codes-barres</h3>
             <p>Génération et impression d'étiquettes produit, scan via douchette ou caméra.</p>
           </div>
           <div class="feature-card">
-            <div class="feature-icon">👥</div>
+            <div class="feature-icon" aria-hidden="true">👥</div>
             <h3>Équipe &amp; permissions</h3>
             <p>Un vendeur par membre de l'équipe, code PIN et droits d'accès personnalisés (remises, remboursements…).</p>
           </div>
           <div class="feature-card">
-            <div class="feature-icon">🧾</div>
+            <div class="feature-icon" aria-hidden="true">🧾</div>
             <h3>Tickets &amp; reçus</h3>
             <p>Ticket imprimable ou envoyé par email, avec logo et coordonnées de votre magasin.</p>
           </div>
@@ -418,17 +549,24 @@
         <div class="footer-col">
           <h4>Produit</h4>
           <ul>
-            <li><a href="#fonctionnalites">Fonctionnalités</a></li>
-            <li><a href="#multi-magasins">Multi-magasins</a></li>
-            <li><a href="#tarifs">Tarifs</a></li>
+            <li><a href="./logiciel-de-caisse/">Métiers</a></li>
+            <li><a href="./fonctionnalites/">Fonctionnalités</a></li>
+            <li><a href="./nf525/">Conformité NF525</a></li>
+            <li><a href="./tarifs/">Tarifs</a></li>
             <li><a href="https://app.hippopos.fr">Se connecter</a></li>
           </ul>
         </div>
         <div class="footer-col">
-          <h4>Entreprise</h4>
+          <h4>Métiers</h4>
           <ul>
-            <li><a href="mailto:contact@hippopos.fr">Contact</a></li>
-            <li><a href="#faq">Questions fréquentes</a></li>
+            <li><a href="./logiciel-de-caisse/boulangerie/">Boulangerie</a></li>
+            <li><a href="./logiciel-de-caisse/patisserie/">Pâtisserie</a></li>
+            <li><a href="./logiciel-de-caisse/chocolaterie/">Chocolaterie</a></li>
+            <li><a href="./logiciel-de-caisse/boucherie/">Boucherie</a></li>
+            <li><a href="./logiciel-de-caisse/charcuterie/">Charcuterie</a></li>
+            <li><a href="./logiciel-de-caisse/poissonnerie/">Poissonnerie</a></li>
+            <li><a href="./logiciel-de-caisse/traiteur/">Traiteur</a></li>
+            <li><a href="./logiciel-de-caisse/epicerie/">Épicerie</a></li>
           </ul>
         </div>
         <div class="footer-col">
@@ -447,32 +585,6 @@
     </div>
   </footer>
 
-  <script>
-    (function () {
-      var toggle = document.getElementById('navToggle');
-      var nav = document.getElementById('mobileNav');
-      if (!toggle || !nav) return;
-
-      function closeNav() {
-        nav.classList.remove('is-open');
-        toggle.classList.remove('is-open');
-        toggle.setAttribute('aria-expanded', 'false');
-      }
-
-      toggle.addEventListener('click', function () {
-        var open = nav.classList.toggle('is-open');
-        toggle.classList.toggle('is-open', open);
-        toggle.setAttribute('aria-expanded', String(open));
-      });
-
-      nav.addEventListener('click', function (e) {
-        if (e.target.tagName === 'A') closeNav();
-      });
-
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') closeNav();
-      });
-    })();
-  </script>
+  <script src="menu.js" defer></script>
 </body>
 </html>

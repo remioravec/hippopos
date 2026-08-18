@@ -3,7 +3,7 @@
   --surface: #ffffff;
   --border: rgba(44, 62, 93, 0.12);
   --text: #2c3e5d;
-  --text-muted: rgba(44, 62, 93, 0.62);
+  --text-muted: rgba(44, 62, 93, 0.75);
   --primary: #2c3e5d;
   --primary-dark: #1e2e42;
   --primary-tint: #fef3e8;
@@ -178,7 +178,7 @@ a {
 }
 .btn-cta {
   background: var(--cta);
-  color: #ffffff;
+  color: var(--primary);
   box-shadow: var(--shadow-md);
 }
 .btn-cta:hover {
@@ -331,7 +331,7 @@ a {
   bottom: -18px;
   left: -18px;
   background: var(--cta);
-  color: #fff;
+  color: var(--primary);
   padding: 12px 18px;
   border-radius: var(--radius);
   box-shadow: var(--shadow-md);
@@ -430,7 +430,7 @@ section {
   grid-template-columns: 1fr 1fr;
   gap: 48px;
   align-items: center;
-  padding: 64px 0;
+  padding: 64px 40px;
 }
 .highlight-copy .eyebrow {
   background: rgba(255, 255, 255, 0.12);
@@ -470,7 +470,7 @@ section {
   height: 22px;
   border-radius: 50%;
   background: var(--cta);
-  color: #fff;
+  color: var(--primary);
   font-size: 0.75rem;
   display: flex;
   align-items: center;
@@ -503,7 +503,7 @@ section {
 }
 .shop-row .pill {
   background: var(--cta);
-  color: #fff;
+  color: var(--primary);
   border-radius: 999px;
   padding: 4px 12px;
   font-size: 0.75rem;
@@ -575,7 +575,7 @@ section {
 .plan-badge {
   align-self: flex-start;
   background: var(--cta);
-  color: #fff;
+  color: var(--primary);
   font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -676,7 +676,7 @@ section {
   border-radius: var(--radius-lg);
   padding: 64px 40px;
   text-align: center;
-  color: #fff;
+  color: var(--primary);
 }
 .cta-band h2 {
   margin: 0 0 14px;
@@ -684,7 +684,7 @@ section {
 }
 .cta-band p {
   margin: 0 0 30px;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--primary);
   font-size: 1.05rem;
 }
 .cta-band .btn-light {
@@ -824,7 +824,7 @@ section {
     --surface: #1f2937;
     --border: rgba(255, 255, 255, 0.1);
     --text: #eef1f6;
-    --text-muted: rgba(238, 241, 246, 0.62);
+    --text-muted: rgba(238, 241, 246, 0.78);
     --primary-tint: rgba(244, 163, 90, 0.14);
     --muted: #263142;
     --secondary: #263142;
@@ -835,8 +835,173 @@ section {
   .btn-ghost:hover {
     background: rgba(255, 255, 255, 0.06);
   }
+  /* .btn-light vit sur la bande orange, identique dans les deux thèmes :
+     sans fond blanc forcé, il héritait de --surface sombre et tombait à 1,37:1. */
+  .btn-light {
+    background: #ffffff;
+    color: var(--primary);
+  }
   .hero-badge,
   .cta-band {
     box-shadow: none;
   }
+}
+
+/* ==========================================================================
+   Gabarits de l'arbre — hub de silo, unité d'achat (métier), page tarifs.
+   Ajouté avec les 12 pages du mois d'août 2026 (roadmap contenu, étages 1-2).
+   ========================================================================== */
+
+/* Fil d'Ariane */
+.breadcrumb {
+  padding: 20px 0 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+.breadcrumb ol {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+}
+.breadcrumb li::after {
+  content: '›';
+  margin-left: 8px;
+  color: var(--text-muted);
+}
+.breadcrumb li:last-child::after { content: none; }
+.breadcrumb a { color: var(--text-muted); text-decoration: none; }
+.breadcrumb a:hover { color: var(--text); text-decoration: underline; }
+.breadcrumb [aria-current='page'] { color: var(--text); font-weight: 500; }
+
+/* En-tête de page intérieure */
+.page-hero { padding: 40px 0 56px; }
+.page-hero h1 {
+  font-size: clamp(1.9rem, 3.4vw, 2.9rem);
+  line-height: 1.15;
+  margin: 16px 0 18px;
+  max-width: 28ch;
+}
+.page-hero .lede {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 62ch;
+  margin: 0 0 28px;
+}
+.page-hero .hero-cta-row { margin-bottom: 0; }
+
+/* Grille de cartes-liens (métiers, fonctions, déclinaisons, sœurs) */
+.link-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(248px, 1fr));
+  gap: 16px;
+}
+.link-card {
+  display: block;
+  padding: 22px 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.link-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.link-card strong { display: block; font-size: 1.02rem; margin-bottom: 6px; }
+.link-card span { display: block; font-size: 0.9rem; color: var(--text-muted); }
+.link-card.is-soon {
+  background: transparent;
+  box-shadow: none;
+  border-style: dashed;
+  cursor: default;
+}
+.link-card.is-soon:hover { transform: none; box-shadow: none; }
+
+/* Couvert / non couvert */
+.coverage {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.coverage-col {
+  padding: 28px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.coverage-col h3 { margin: 0 0 16px; font-size: 1.05rem; }
+.coverage-col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.coverage-col li { position: relative; padding-left: 30px; font-size: 0.96rem; }
+.coverage-col li::before {
+  position: absolute;
+  left: 0;
+  top: 1px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.coverage-yes li::before { content: '✓'; background: var(--success); color: #fff; }
+.coverage-no li::before { content: '×'; background: var(--muted); color: var(--text); }
+.coverage-no { background: transparent; }
+.coverage-note {
+  margin: 20px 0 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* Signature métier — la contrainte propre au métier */
+.signature {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+.signature-quote {
+  font-size: 1.25rem;
+  line-height: 1.5;
+  font-weight: 500;
+  margin: 0;
+}
+.signature-quote em { color: var(--cta-dark); font-style: normal; }
+
+/* Bloc « à fournir » — tout ce qui manque est surligné, jamais inventé */
+.a-fournir {
+  background: #fff6b8;
+  color: #4a3c00;
+  border: 1px dashed #d9b400;
+  border-radius: var(--radius);
+  padding: 3px 8px;
+  font-weight: 500;
+}
+.a-fournir-bloc {
+  background: #fff6b8;
+  color: #4a3c00;
+  border: 1px dashed #d9b400;
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  font-size: 0.95rem;
+}
+.a-fournir-bloc strong { display: block; margin-bottom: 6px; }
+
+/* Tableau de prix */
+.price-table { width: 100%; border-collapse: collapse; font-size: 0.96rem; }
+.price-table th,
+.price-table td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+.price-table th { font-weight: 600; }
+.price-table tbody tr:last-child td { border-bottom: none; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+
+/* Pied de page — navigation de l'arbre */
+.footer-col ul li a[aria-current='page'] { color: var(--text); font-weight: 600; }
+
+@media (max-width: 860px) {
+  .coverage, .signature { grid-template-columns: 1fr; gap: 24px; }
 }
