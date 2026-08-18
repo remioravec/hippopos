@@ -525,10 +525,9 @@ def hub_metiers():
     </section>"""
     return page_hub(
         url="/logiciel-de-caisse/",
-        titre="Logiciel de caisse pour commerce de détail : 18 métiers couverts",
-        desc="Un logiciel de caisse pensé pour le commerce de détail : vente au poids ou à "
-             "la pièce, variantes, stock par magasin et clôtures conformes. À partir de "
-             "29 € HT par mois.",
+        titre="Logiciel de caisse pour commerce de détail : 18 métiers",
+        desc="Vente au poids ou à la pièce, variantes, stock par magasin et clôtures "
+             "conformes NF525. 18 métiers de détail couverts, à partir de 29 € HT par mois.",
         h1="Logiciel de caisse pour commerce de détail",
         lede="Boulangerie, boucherie, épicerie, chocolaterie : la façon de vendre change d'un "
              "comptoir à l'autre, la caisse doit suivre. Choisissez votre métier pour voir ce "
@@ -733,8 +732,7 @@ def hub_nf525():
         url="/nf525/",
         titre="Logiciel de caisse certifié NF525 : ce que la loi exige",
         desc="Inaltérabilité, sécurisation, conservation, archivage : les quatre exigences "
-             "auxquelles votre caisse doit répondre, et comment Hippopos y répond par le "
-             "chaînage.",
+             "auxquelles votre caisse doit répondre, et comment le vérifier.",
         h1="Logiciel de caisse certifié NF525 : ce que la loi exige vraiment",
         lede="Quatre exigences, un justificatif à pouvoir présenter, et une amende à la clé "
              "en cas de contrôle. Cette page dit ce que la norme impose et comment vérifier "

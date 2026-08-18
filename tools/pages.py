@@ -56,9 +56,7 @@ METIERS = {
         nom="boulangerie", famille="Métiers de bouche", vol=70, releve="15/08/2026",
         requete="logiciel de caisse boulangerie",
         title="Logiciel de caisse boulangerie : vente au poids et file rapide",
-        desc="Baguettes à l'unité, viennoiseries au sachet, chocolats au poids : trois "
-             "modes de vente sur un même ticket, sans ressaisie. Caisse conforme NF525, "
-             "à partir de 29 € HT par mois.",
+        desc="Baguettes à l'unité, viennoiseries au sachet, chocolats au poids : trois modes de vente sur un même ticket. Caisse NF525 dès 29 € HT par mois.",
         h1="Logiciel de caisse boulangerie : encaisser au poids sans ralentir la file",
         lede="Baguettes à l'unité, viennoiseries au sachet, chocolats en vrac au poids : "
              "trois modes de vente sur un seul ticket, en trois gestes. Votre balance "
@@ -87,9 +85,7 @@ METIERS = {
         nom="pâtisserie", famille="Métiers de bouche", vol=10, releve="08/08/2026",
         requete="logiciel de caisse pâtisserie",
         title="Logiciel de caisse pâtisserie : la part, la pièce et le poids",
-        desc="Un entremets décliné en trois formats et deux parfums reste un seul produit "
-             "au catalogue. Vente à la part, à la pièce ou au poids, TVA sur place et à "
-             "emporter, conformité NF525.",
+        desc="Un entremets décliné en formats et parfums reste un seul produit au catalogue. Vente à la part, à la pièce ou au poids, conformité NF525.",
         h1="Logiciel de caisse pâtisserie : la part, la pièce et le poids sur un même ticket",
         lede="Un entremets se vend à la part, en 6 ou en 8, parfois au poids. Les variantes "
              "évitent de créer douze fiches produit pour un seul gâteau — et de perdre le "
@@ -115,10 +111,8 @@ METIERS = {
     "chocolaterie": dict(
         nom="chocolaterie", famille="Métiers de bouche", vol=10, releve="08/08/2026",
         requete="logiciel de caisse chocolaterie",
-        title="Logiciel de caisse chocolaterie : ballotins au poids et pics de saison",
-        desc="Le ballotin composé se pèse, le coffret se vend à la pièce, et tout se joue "
-             "sur trois semaines à Noël et à Pâques. Vente au poids, variantes et stock "
-             "par magasin, conforme NF525.",
+        title="Logiciel de caisse chocolaterie : le poids et la saison",
+        desc="Le ballotin composé se pèse, le coffret se vend à la pièce. Vente au poids, variantes et stock par magasin, conforme NF525 dès 29 € HT.",
         h1="Logiciel de caisse chocolaterie : le ballotin au poids, le coffret à la pièce",
         lede="Un client compose son ballotin, vous le pesez ; le suivant prend un coffret "
              "déjà monté. Deux façons de vendre le même chocolat, sur le même ticket, "
@@ -144,10 +138,8 @@ METIERS = {
     "boucherie": dict(
         nom="boucherie", famille="Métiers de bouche", vol=10, releve="08/08/2026",
         requete="logiciel de caisse boucherie",
-        title="Logiciel de caisse boucherie : peser et encaisser sans ressaisie",
-        desc="Le prix au kilo, la découpe à la demande et le plat cuisiné vendu à la pièce, "
-             "sur un même ticket. Votre balance reste en place. Caisse conforme NF525 dès "
-             "29 € HT par mois.",
+        title="Logiciel de caisse boucherie : peser et encaisser",
+        desc="Prix au kilo, découpe à la demande et plat cuisiné à la pièce, sur un même ticket. Votre balance reste en place. Caisse conforme NF525.",
         h1="Logiciel de caisse boucherie : peser, découper, encaisser sans ressaisie",
         lede="Le rôti se pèse, la saucisse se compte, le plat cuisiné se vend à la part. "
              "Hippopos lit le poids depuis votre balance et le porte au ticket, sans que "
@@ -174,9 +166,7 @@ METIERS = {
         nom="charcuterie", famille="Métiers de bouche", vol=10, releve="08/08/2026",
         requete="logiciel de caisse charcuterie",
         title="Logiciel de caisse charcuterie : le poids, la tranche et le plat",
-        desc="Jambon à la tranche, terrine au poids, plat cuisiné à la part : trois façons "
-             "de vendre, un seul ticket et une seule caisse conforme NF525. À partir de "
-             "29 € HT par mois.",
+        desc="Jambon à la tranche, terrine au poids, plat cuisiné à la part : trois façons de vendre, un seul ticket, une caisse conforme NF525.",
         h1="Logiciel de caisse charcuterie : le poids, la tranche et le plat cuisiné",
         lede="On vend à la tranche, au poids et à la part dans la même minute. La caisse "
              "doit suivre les trois sans changer de mode, et sortir un ticket juste du "
@@ -202,10 +192,8 @@ METIERS = {
     "poissonnerie": dict(
         nom="poissonnerie", famille="Métiers de bouche", vol=10, releve="08/08/2026",
         requete="logiciel de caisse poissonnerie",
-        title="Logiciel de caisse poissonnerie : le prix au kilo change chaque matin",
-        desc="Le cours change avec l'arrivage : le prix au kilo se met à jour en caisse, "
-             "pas sur une étiquette imprimée la veille. Vente au poids et conformité "
-             "NF525, dès 29 € HT par mois.",
+        title="Logiciel de caisse poissonnerie : le prix au kilo du jour",
+        desc="Le cours change avec l'arrivage : le prix au kilo se corrige en caisse, pas sur une étiquette de la veille. Vente au poids, NF525.",
         h1="Logiciel de caisse poissonnerie : un prix au kilo qui change avec l'arrivage",
         lede="Le cours du matin décide du prix de la journée. Le tarif se corrige en caisse "
              "en quelques secondes, et le ticket comme le stock suivent immédiatement.",
@@ -230,10 +218,8 @@ METIERS = {
     "traiteur": dict(
         nom="traiteur", famille="Métiers de bouche", vol=10, releve="08/08/2026",
         requete="logiciel de caisse traiteur",
-        title="Logiciel de caisse traiteur : vendre au poids, au plat et à emporter",
-        desc="Barquettes pesées, plats à la part, TVA sur place et à emporter : la vente "
-             "au comptoir d'un traiteur tient sur une seule caisse conforme NF525. À partir "
-             "de 29 € HT par mois.",
+        title="Logiciel de caisse traiteur : au poids, au plat, à emporter",
+        desc="Barquettes pesées, plats à la part, TVA sur place et à emporter : la vente au comptoir tient sur une seule caisse conforme NF525.",
         h1="Logiciel de caisse traiteur : vendre au poids, au plat et à emporter",
         lede="La barquette se pèse, le plat se compte, et la TVA n'est pas la même selon que "
              "le client consomme sur place ou emporte. Hippopos couvre la vente au comptoir.",
@@ -261,9 +247,7 @@ METIERS = {
         nom="épicerie", famille="Commerce de détail", vol=70, releve="07/08/2026",
         requete="logiciel de caisse épicerie",
         title="Logiciel de caisse épicerie : catalogue large, scanné et suivi",
-        desc="Des centaines de références, du vrac au poids et des codes-barres à la "
-             "douchette : le catalogue d'une épicerie tient en caisse sans devenir "
-             "ingérable. Conforme NF525, dès 29 € HT par mois.",
+        desc="Des centaines de références, du vrac au poids et des codes-barres à la douchette. Stock suivi et caisse NF525, dès 29 € HT par mois.",
         h1="Logiciel de caisse épicerie : un catalogue large, scanné et suivi",
         lede="Huit cents références en rayon, du vrac au poids, des lots à codes-barres : "
              "l'épicerie est le métier où le catalogue déborde le plus vite. Le scan et les "
