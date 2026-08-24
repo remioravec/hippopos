@@ -12,10 +12,16 @@ Recadrées en 4:3, converties en WebP, toutes sous 200 Ko.
 | patisserie | `assets/metiers/patisserie.webp` | — | CC0 | [source](https://www.rawpixel.com/image/5964162/free-public-domain-cc0-photo) |
 | chocolaterie | `assets/metiers/chocolaterie.webp` | — | CC0 | [source](https://www.rawpixel.com/image/5945408/free-public-domain-cc0-photo) |
 | boucherie | `assets/metiers/boucherie.webp` | Butcher shop | CC0 | [source](https://www.rawpixel.com/image/5975314/butcher-shop) |
+| charcuterie | `assets/metiers/charcuterie.webp` | Free prosciutto ham image | CC0 | [source](https://www.rawpixel.com/image/5921767/photo-image-public-domain-green-red) |
+| poissonnerie | `assets/metiers/poissonnerie.webp` | — | CC0 | [source](https://www.rawpixel.com/image/5964248/free-public-domain-cc0-photo) |
+| traiteur | `assets/metiers/traiteur.webp` | Celebration meal | CC0 | [source](https://www.rawpixel.com/image/448001/free-photo-image-canape-celebration-catering) |
 | epicerie | `assets/metiers/epicerie.webp` | Vegetables in a supermarket | CC0 | [source](https://www.rawpixel.com/image/6082112/vegetables-supermarket) |
 
-**Traiteur, charcuterie et poissonnerie** n'ont pas de photographie. Les seuls
-candidats CC0 disponibles montraient autre chose que le métier : des pâtisseries
-pour le traiteur, un stand de brochettes pour la charcuterie, et un étal
-asiatique avec des prix en taka pour la poissonnerie. Ces trois pages conservent
-leur maquette de ticket seule — mieux vaut pas de photo qu'une photo fausse.
+Les huit pages métier ont désormais une photographie. Les trois qui en étaient
+privées — charcuterie, poissonnerie, traiteur — ont été reprises sur une seconde
+recherche, restreinte aux fonds CC0 de rawpixel : les premiers candidats
+montraient autre chose que le métier (un étal asiatique avec des prix en taka
+pour la poissonnerie, un stand de brochettes pour la charcuterie).
+
+Aucune photographie ne montre de personne identifiable, de marque, ni d'enseigne
+commerciale existante.

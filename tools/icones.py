@@ -130,6 +130,11 @@ _TRACES = {
         '<path d="M4.5 10.5V20h15v-9.5"/>'
         '<path d="M3 10.5l1.8-5.5h14.4l1.8 5.5"/>'
         '<path d="M3 10.5h18"/><path d="M9.5 20v-5.5h5V20"/>',
+    # Archivage — caisse d'archives
+    "archive":
+        '<rect x="3" y="3.5" width="18" height="5" rx="1.5"/>'
+        '<path d="M4.5 8.5V19a1.5 1.5 0 0 0 1.5 1.5h12a1.5 1.5 0 0 0 1.5-1.5V8.5"/>'
+        '<path d="M10 12.5h4"/>',
     # Matériel — douchette
     "douchette":
         '<path d="M4 5v14M7 5v14M10.5 5v14M14 5v14M17.5 5v10"/>'

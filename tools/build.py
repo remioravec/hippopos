@@ -22,7 +22,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).parent))
 from icones import ico  # noqa: E402
 from pages import (  # noqa: E402
     METIERS, METIERS_COUVERTS, FAQ_SILO_METIERS, FONCTIONS, FONCTIONS_PUBLIEES,
-    PEURS, FONCTIONS_DETAIL, CAS, VARIANTES_EXEMPLE,
+    PEURS, FONCTIONS_DETAIL, CAS, VARIANTES_EXEMPLE, PEURS_HUB,
 )
 
 RACINE = pathlib.Path(__file__).resolve().parent.parent
@@ -383,22 +383,22 @@ def faq_metier(nom):
 # écran inventé qui vieillirait mal — un panneau sobre, marqué « Exemple », qui
 # montre la donnée dont parle la section.
 
-def bloc_peurs(slug, nom):
-    """Trois contraintes du métier, illustrées — au lieu d'un paragraphe centré."""
+def grille_peurs(peurs, eyebrow, titre):
+    """Trois contraintes illustrées — au lieu d'un paragraphe centré."""
     cartes = "\n".join(
         f"""          <div class="peur-card">
             <div class="peur-ico">{ico(i)}</div>
-            <h3>{titre}</h3>
-            <p>{texte}</p>
+            <h3>{t}</h3>
+            <p>{txt}</p>
           </div>"""
-        for i, titre, texte in PEURS[slug]
+        for i, t, txt in peurs
     )
-    return f"""    <!-- 3. Peurs et frustrations · 0 lien -->
+    return f"""    <!-- Peurs et frustrations · 0 lien -->
     <section>
       <div class="container">
         <div class="section-head">
-          <span class="eyebrow">Ce qui coince au comptoir</span>
-          <h2>Les trois contraintes d'une caisse de {nom}</h2>
+          <span class="eyebrow">{eyebrow}</span>
+          <h2>{titre}</h2>
         </div>
         <div class="peur-grid">
 {cartes}
@@ -406,6 +406,11 @@ def bloc_peurs(slug, nom):
       </div>
     </section>
 """
+
+
+def bloc_peurs(slug, nom):
+    return grille_peurs(PEURS[slug], "Ce qui coince au comptoir",
+                        f"Les trois contraintes d'une caisse de {nom}")
 
 
 def _ligne_panneau(gauche, droite, sous="", ton=""):
@@ -496,6 +501,39 @@ def panneau(cle, slug, m):
         ])
         return _panneau("Chèque cadeau · code unique", corps)
 
+    if cle == "conformite":
+        corps = "\n".join([
+            _ligne_panneau("Vente n° 1 042", "12:04:38", "Horodatée à l'enregistrement"),
+            _ligne_panneau("Chaînée à la vente", "n° 1 041", "Lien conservé"),
+            _ligne_panneau("Contrôle d'intégrité", "Conforme", "", " est-ok"),
+        ])
+        return _panneau("Journal des ventes", corps)
+
+    if cle == "ticket":
+        entete, lignes, total = m["ticket"]
+        rangs = "\n".join(
+            f"""              <div class="hero-product-row">
+                <div>
+                  <div class="name">{n}</div>
+                  <div class="sub">{sub}</div>
+                </div>
+                <div class="price">{prix}</div>
+              </div>"""
+            for n, sub, prix in lignes)
+        return f"""          <div class="hero-card">
+            <div class="hero-card-header">
+              <strong>{entete}</strong>
+              <span>Ticket en cours</span>
+            </div>
+            <div class="hero-card-body">
+{rangs}
+            </div>
+            <div class="hero-total">
+              <span>Total TTC</span>
+              <span>{total}</span>
+            </div>
+          </div>"""
+
     if cle == "fidelite":
         corps = "\n".join([
             _ligne_panneau("Mécanique choisie", "Carte à tampons"),
@@ -536,6 +574,34 @@ def section_fonction(rang, cle, slug, m, ancre, url):
         </div>
         <div class="fonction-visuel">
 {panneau(cle, slug, m)}
+        </div>
+      </div>
+    </section>
+"""
+
+
+def section_hub_fonction(rang, id_, titre, chapeau, puces, panneau_cle, m, addon=False):
+    """Une brique du produit, une section — même gabarit que sur les pages métier.
+
+    L'ancre reste `#id` : les pages métier pointent dessus, et la grille de
+    cartes qu'elle remplace la portait déjà.
+    """
+    liste = "\n".join(f"            <li>{x}</li>" for x in puces)
+    badge = ('<span class="p-tag p-addon">Activable à la demande</span>' if addon else "")
+    inverse = " est-inverse" if rang % 2 else ""
+    fond = " bande" if rang % 2 else ""
+    return f"""    <section class="fonction{inverse}{fond}" id="{id_}">
+      <div class="container">
+        <div class="fonction-texte">
+          <span class="eyebrow">{ico(id_)} {"Add-on" if addon else "Brique comprise"}</span>
+          <h3>{titre} {badge}</h3>
+          <p class="fonction-chapeau">{chapeau}</p>
+          <ul class="check-list">
+{liste}
+          </ul>
+        </div>
+        <div class="fonction-visuel">
+{panneau(panneau_cle, "boulangerie", m)}
         </div>
       </div>
     </section>
@@ -630,9 +696,10 @@ def page_metier(slug):
     )
 
     photo_src = m.get("photo")
-    classe_photo = " avec-photo" if photo_src else ""
-    photo = (f'          <img class="hero-photo" src="../../assets/{photo_src}"\n'
-             f'               alt="{m.get("photo_alt", "")}" width="800" height="600" />\n'
+    photo = (f'        <figure class="hero-visuel">\n'
+             f'          <img class="hero-photo" src="../../assets/{photo_src}"\n'
+             f'               alt="{m.get("photo_alt", "")}" width="1200" height="900" />\n'
+             f'        </figure>\n'
              if photo_src else "")
 
     ticket_entete, lignes_ticket, ticket_total = m["ticket"]
@@ -650,9 +717,9 @@ def page_metier(slug):
     corps = f"""
   <main>
     <!-- 1. Hero — USP et réassurance · 0 lien interne -->
-    <section class="page-hero">
+    <section class="page-hero hero-metier-page">
       <div class="container">
-        <div>
+        <div class="hero-mots">
           <span class="eyebrow">{m["famille"]}</span>
           <h1>{m["h1"]}</h1>
           <p class="lede">{m["lede"]}</p>
@@ -661,22 +728,7 @@ def page_metier(slug):
           </div>
           <p class="hero-note">Sans engagement · Sans carte bancaire · Votre matériel reste en place</p>
         </div>
-        <div class="hero-metier{classe_photo}">
-{photo}          <div class="hero-card">
-            <div class="hero-card-header">
-              <strong>{ticket_entete}</strong>
-              <span>Ticket en cours</span>
-            </div>
-            <div class="hero-card-body">
-{lignes}
-            </div>
-            <div class="hero-total">
-              <span>Total TTC</span>
-              <span>{ticket_total}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+{photo}      </div>
     </section>
 
     <!-- 2. Réassurance — ligne de flottaison · 0 lien -->
@@ -693,6 +745,38 @@ def page_metier(slug):
       </div>
     </section>
 {fonctions}
+    <!-- 4 bis. Le ticket — ce que la caisse produit · 0 lien -->
+    <section class="fonction est-inverse bande">
+      <div class="container">
+        <div class="fonction-texte">
+          <span class="eyebrow">{ico("tickets")} Le ticket</span>
+          <h3>Pièce, poids et part sur le même ticket</h3>
+          <p class="fonction-chapeau">Le détail que le client attend, et la trace que
+             l'administration peut demander : c'est le même document.</p>
+          <ul class="check-list">
+            <li>Imprimé sur l'imprimante thermique en place, ou envoyé par email</li>
+            <li>Logo et coordonnées du magasin repris de votre fiche</li>
+            <li>Chaque vente chaînée et horodatée, conforme NF525</li>
+          </ul>
+        </div>
+        <div class="fonction-visuel">
+          <div class="hero-card">
+            <div class="hero-card-header">
+              <strong>{ticket_entete}</strong>
+              <span>Ticket en cours</span>
+            </div>
+            <div class="hero-card-body">
+{lignes}
+            </div>
+            <div class="hero-total">
+              <span>Total TTC</span>
+              <span>{ticket_total}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- 5. Axe sœur · 2 liens métier + 1 vers la mère -->
     <section>
       <div class="container">
@@ -780,7 +864,7 @@ def page_metier(slug):
 # Gabarit — hub de silo
 # --------------------------------------------------------------------------
 def page_hub(url, titre, desc, h1, lede, eyebrow, sections, faq, faq_titre,
-             nom_ld, profondeur=1, faq_chapeau=""):
+             nom_ld, profondeur=1, faq_chapeau="", titre_peurs=""):
     fil = [("Accueil", "/"), (eyebrow, url)]
     ld = [
         ld_ariane(url, fil),
@@ -806,6 +890,8 @@ def page_hub(url, titre, desc, h1, lede, eyebrow, sections, faq, faq_titre,
         </div>
       </div>
     </section>
+{bande_reassurance()}
+{grille_peurs(PEURS_HUB[url][1], PEURS_HUB[url][0], titre_peurs) if url in PEURS_HUB else ""}
 {sections}
 {bloc_faq(faq, faq_titre, faq_chapeau)}
 {bande_cta("Prêt à simplifier votre caisse ?",
@@ -916,6 +1002,7 @@ def hub_metiers():
         faq=FAQ_SILO_METIERS,
         faq_titre="Les questions qu'on nous pose avant de choisir",
         nom_ld="Logiciel de caisse pour commerce de détail",
+        titre_peurs="Trois contraintes que la caisse doit lever",
     )
 
 
@@ -943,14 +1030,51 @@ COMPATIBILITES = [
 ]
 
 
+# Ce que chaque brique met en avant sur le hub. Le titre et le chapeau viennent
+# de BRIQUES/ADDONS ; les puces reprennent le détail écrit pour les pages métier
+# quand il existe, pour que les deux étages disent la même chose.
+PUCES_HUB = {
+    "caisse-tactile": ["Vente à la pièce, au poids ou par variante, sur le même ticket",
+                       "Remises en pourcentage ou en euros, à la ligne ou au ticket",
+                       "Paiements mixtes : espèces, carte et chèque sur une même vente"],
+    "conformite": ["Chaque vente chaînée à la précédente et horodatée",
+                   "Journaux de vente et de clôture consultables à tout moment",
+                   "Clôtures archivées, présentables en cas de contrôle"],
+    # Le ticket cadeau appartient à l'add-on « tickets et chèques cadeaux »,
+    # pas à cette brique : il n'est pas cité ici.
+    "tickets": ["Imprimé sur l'imprimante thermique en place, ou envoyé par email",
+                "Logo et coordonnées du magasin repris de votre fiche",
+                "Lignes, remises et moyens de paiement détaillés sur le ticket"],
+}
+
+# id du hub → (clé de FONCTIONS_DETAIL pour les puces, clé de panneau)
+SOURCE_HUB = {
+    "caisse-tactile": (None, "vente-au-poids"),
+    "conformite": (None, "conformite"),
+    "stock": ("gestion-de-stock", "stock"),
+    "clotures": ("cloture-de-caisse", "clotures"),
+    "equipe": ("comptes-vendeurs", "equipe"),
+    "tickets": (None, "ticket"),
+    "multi-magasins": ("multi-magasins", "multi-magasins"),
+    "fidelite": ("fidelite", "fidelite"),
+    "etiquettes": ("etiquettes", "etiquettes"),
+    "cheques-cadeaux": ("cheques-cadeaux", "cheques-cadeaux"),
+}
+
+
 def hub_fonctionnalites():
-    carte = lambda i, t, d: f"""          <div class="feature-card" id="{i}">
-            <div class="feature-icon">{ico(i)}</div>
-            <h3>{t}</h3>
-            <p>{d}</p>
-          </div>"""
-    briques = "\n".join(carte(i, t, d) for i, t, d in BRIQUES)
-    addons = "\n".join(carte(i, t, d) for i, t, d in ADDONS)
+    m = METIERS["boulangerie"]
+
+    def section(rang, id_, titre, desc, addon):
+        cle_detail, cle_panneau = SOURCE_HUB[id_]
+        puces = (FONCTIONS_DETAIL[cle_detail]["puces"] if cle_detail
+                 else PUCES_HUB[id_])
+        return section_hub_fonction(rang, id_, titre, desc, puces, cle_panneau, m, addon)
+
+    briques = "\n".join(section(r, i, t, d, False)
+                        for r, (i, t, d) in enumerate(BRIQUES))
+    addons = "\n".join(section(r, i, t, d, True)
+                       for r, (i, t, d) in enumerate(ADDONS, start=len(BRIQUES)))
     compat = "\n".join(
         f"""          <div class="link-card is-info">
             {ico(i)}
@@ -960,7 +1084,7 @@ def hub_fonctionnalites():
         for i, t, d in COMPATIBILITES
     )
     sections = f"""
-    <section>
+    <section class="fonctions-tete">
       <div class="container">
         <div class="section-head">
           <span class="eyebrow">Vendre et piloter</span>
@@ -968,19 +1092,20 @@ def hub_fonctionnalites():
           <p>Ces six briques sont dans l'abonnement dès la première formule, sans supplément
              et sans réglage préalable.</p>
         </div>
-        <div class="features-grid">
+      </div>
+    </section>
 {briques}
-        </div>
-
-        <div class="subsection-head">
-          <h3>Les 4 add-ons activables à la demande</h3>
-          <p>Ils s'activent en un clic depuis les paramètres, uniquement si le commerce en a besoin.</p>
-        </div>
-        <div class="features-grid addons-grid">
-{addons}
+    <section class="fonctions-tete">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">À la demande</span>
+          <h2>Les 4 add-ons activables</h2>
+          <p>Ils s'activent en un clic depuis les paramètres, uniquement si le commerce
+             en a besoin — et sont facturés à partir de la formule qui les porte.</p>
         </div>
       </div>
     </section>
+{addons}
 
     <section>
       <div class="container">
@@ -1031,24 +1156,26 @@ def hub_fonctionnalites():
         faq=faq,
         faq_titre="Ce qu'on nous demande sur les fonctions",
         nom_ld="Fonctionnalités du logiciel de caisse Hippopos",
+        titre_peurs="Trois questions à poser avant l'essai",
     )
 
 
 EXIGENCES = [
-    ("Inaltérabilité", "Une vente enregistrée ne peut plus être modifiée ni supprimée."),
-    ("Sécurisation", "Chaque opération est tracée et chaînée à la précédente par un calcul cryptographique."),
-    ("Conservation", "Les données de vente sont conservées et restent consultables dans le temps."),
-    ("Archivage", "Les clôtures sont archivées et présentables en cas de contrôle fiscal."),
+    ("cadenas", "Inaltérabilité", "Une vente enregistrée ne peut plus être modifiée ni supprimée."),
+    ("conformite", "Sécurisation", "Chaque opération est tracée et chaînée à la précédente par un calcul cryptographique."),
+    ("oeil", "Conservation", "Les données de vente sont conservées et restent consultables dans le temps."),
+    ("archive", "Archivage", "Les clôtures sont archivées et présentables en cas de contrôle fiscal."),
 ]
 
 
 def hub_nf525():
     ex = "\n".join(
         f"""          <div class="feature-card">
+            <div class="feature-icon">{ico(i)}</div>
             <h3>{t}</h3>
             <p>{d}</p>
           </div>"""
-        for t, d in EXIGENCES
+        for i, t, d in EXIGENCES
     )
     sections = f"""
     <section>
@@ -1133,6 +1260,7 @@ def hub_nf525():
         faq=faq,
         faq_titre="Les questions de conformité",
         nom_ld="Conformité NF525 du logiciel de caisse Hippopos",
+        titre_peurs="Trois inquiétudes que la conformité doit lever",
     )
 
 
@@ -1262,6 +1390,7 @@ def hub_tarifs():
         faq=faq,
         faq_titre="Les questions sur le prix",
         nom_ld="Tarifs du logiciel de caisse Hippopos",
+        titre_peurs="Trois postes qui gonflent le prix d'une caisse",
     )
 
 

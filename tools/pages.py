@@ -275,6 +275,48 @@ VARIANTES_EXEMPLE = {
 }
 
 # --------------------------------------------------------------------------
+# Peurs et frustrations des quatre hubs de l'étage 1
+# --------------------------------------------------------------------------
+# Même règle que pour les métiers : rien qui ne trouve sa réponse dans la page.
+# Et rien qui reproche à la concurrence ce qu'Hippopos fait aussi — les quatre
+# modules activables à la demande sont dits, pas dissimulés.
+
+PEURS_HUB = {
+    "/logiciel-de-caisse/": ("Ce qui coince au comptoir", [
+        ("calcul", "Trois façons de vendre, une seule caisse",
+         "À la pièce, au poids, par variantes. La plupart des caisses en gèrent une proprement, et bricolent les deux autres."),
+        ("controle", "La conformité découverte trop tard",
+         "Un cahier ou un tableur ne chaîne rien. NF525 demande des ventes et des clôtures chaînées et horodatées."),
+        ("alerte", "Le logiciel taillé pour la restauration",
+         "Écran cuisine, plan de salle, commande à table : des fonctions payées et jamais ouvertes, et le poids qui manque."),
+    ]),
+    "/fonctionnalites/": ("Ce qu'on regarde vraiment avant de signer", [
+        ("rupture", "Le module dont on ignore s'il est compris",
+         "Fidélité, étiquettes, multi-magasins : mieux vaut savoir avant de signer ce qui est compris et ce qui s'active en plus."),
+        ("calcul", "Les fonctions qu'on n'ouvrira jamais",
+         "Une caisse de restaurant vendue à une épicerie : des écrans en trop, et rien pour vendre au poids."),
+        ("controle", "Ce que le logiciel ne fait pas",
+         "La liste des fonctions est toujours publiée. Celle des absences, presque jamais — c'est pourtant elle qui fait échouer un essai."),
+    ]),
+    "/nf525/": ("Ce qui inquiète avant un contrôle", [
+        ("controle", "Le justificatif qu'on ne trouve pas",
+         "L'attestation individuelle de conformité est demandée à l'entreprise, pas à l'éditeur. Encore faut-il l'avoir."),
+        ("horloge", "Les ventes qu'on ne peut pas reconstituer",
+         "Un tableur ne garde pas de trace : une ligne corrigée hier ressemble à une ligne saisie hier."),
+        ("cadenas", "Le doute sur ce qu'on a le droit de corriger",
+         "Annuler, rembourser, rectifier une erreur : la caisse doit conserver l'opération et sa correction, jamais effacer."),
+    ]),
+    "/tarifs/": ("Ce qui fait grimper la facture d'une caisse", [
+        ("calcul", "Le matériel imposé",
+         "Terminal, tiroir, imprimante : plusieurs centaines d'euros avant la première vente. Hippopos ne vend aucun matériel."),
+        ("cadenas", "L'engagement de trente-six mois",
+         "Le prix affiché suppose souvent une durée, et sortir avant terme se paie."),
+        ("rupture", "Ce que le tarif d'appel ne comprend pas",
+         "Nombre de magasins, nombre de vendeurs, modules activables : trois raisons pour que la facture ne ressemble pas à l'annonce. Les nôtres sont écrites plus bas."),
+    ]),
+}
+
+# --------------------------------------------------------------------------
 # Étage 2 — les 8 pages métier d'août
 # --------------------------------------------------------------------------
 # couvert  : fonctions réellement au produit (lues sur la home du 15/08)
@@ -457,6 +499,8 @@ METIERS = {
             ("Terrine de campagne", "0,320 kg × 19,00 €/kg", "6,08 €"),
             ("Quiche lorraine — à la part", "2 × 2,80 €", "5,60 €"),
         ], "17,08 €"),
+        photo="metiers/charcuterie.webp",
+        photo_alt="Tranches de jambon sec présentées au comptoir d'une charcuterie",
         croisements=['vente-au-poids', 'variantes-produit', 'etiquettes'],
         soeurs=['boucherie', 'traiteur'],
     ),
@@ -489,6 +533,8 @@ METIERS = {
             ("Moules de bouchot", "1,000 kg × 4,90 €/kg", "4,90 €"),
             ("Crevettes cuites", "0,300 kg × 29,00 €/kg", "8,70 €"),
         ], "27,04 €"),
+        photo="metiers/poissonnerie.webp",
+        photo_alt="Étal de poissonnerie sur glace : dorade, gambas, poulpe et coquillages",
         croisements=['vente-au-poids', 'cloture-de-caisse', 'etiquettes'],
         soeurs=['boucherie', 'charcuterie'],
     ),
@@ -523,6 +569,8 @@ METIERS = {
             ("Lasagnes — à la part", "2 × 5,50 €", "11,00 €"),
             ("Terrine de légumes", "0,180 kg × 24,00 €/kg", "4,32 €"),
         ], "21,32 €"),
+        photo="metiers/traiteur.webp",
+        photo_alt="Plateaux de canapés et de bouchées préparés par un traiteur",
         croisements=['vente-au-poids', 'variantes-produit', 'comptes-vendeurs'],
         soeurs=['charcuterie', 'boucherie'],
     ),

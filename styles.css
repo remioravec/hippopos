@@ -1029,48 +1029,43 @@ section {
   .coverage, .signature { grid-template-columns: 1fr; gap: 24px; }
 }
 
-/* Hero des pages métier — deux colonnes : le discours à gauche, la preuve à
-   droite. L'emplacement photo est prêt : quand `photo` est renseigné dans
-   tools/pages.py, l'image devient le fond et le ticket se pose par-dessus. */
+/* Hero des pages métier — le discours à gauche, la photographie à droite.
+   La maquette de ticket a quitté le hero : elle a sa propre section, plus bas.
+   Ici, la photo porte seule, posée sur un aplat décalé. */
 .page-hero .container {
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
+  grid-template-columns: 1.05fr 1fr;
   gap: 56px;
   align-items: center;
 }
 .page-hero h1 { margin-top: 14px; }
-.hero-metier {
-  position: relative;
-  background: linear-gradient(150deg, var(--primary-tint), var(--secondary));
-  border-radius: 24px;
-  padding: 24px 22px 30px;
-}
-.hero-metier::after {
+.hero-visuel { position: relative; margin: 0; }
+.hero-visuel::before {
   content: '';
   position: absolute;
-  inset: auto 22px 14px 22px;
-  height: 46px;
-  border-radius: 0 0 18px 18px;
-  background: rgba(44, 62, 93, 0.06);
-  z-index: 1;
+  inset: 26px -20px -20px 26px;
+  border-radius: 28px;
+  /* Aplat de marque, pas une ombre : en papier sur papier, le décalage ne se
+     lisait pas. */
+  background: linear-gradient(150deg, rgba(244, 163, 90, 0.38), rgba(244, 163, 90, 0.12));
 }
-.hero-metier .hero-card { position: relative; z-index: 2; }
 .hero-photo {
+  position: relative;
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 11;
+  /* height: auto neutralise l'attribut height du <img>, qui l'emportait sur
+     aspect-ratio et étirait la photo en portrait. */
+  height: auto;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
-  border-radius: var(--radius-lg);
+  border-radius: 24px;
   box-shadow: var(--shadow-lg);
-}
-/* photo + ticket : le ticket chevauche le bas de l'image */
-.hero-metier.avec-photo .hero-card {
-  margin: -74px 0 0 auto;
-  width: 90%;
 }
 @media (max-width: 900px) {
   .page-hero .container { grid-template-columns: 1fr; gap: 32px; }
-  .hero-metier.avec-photo .hero-card { margin: -48px auto 0; width: 94%; }
+  /* Décalage rentré dans la colonne : en négatif, l'aplat poussait la page
+     de 20 px vers la droite. */
+  .hero-visuel::before { inset: 18px 0 -14px 18px; }
 }
 
 /* ==========================================================================
@@ -1192,7 +1187,14 @@ section.bande { background: var(--surface); }
 .mega-liste a:hover .ico { color: var(--cta-dark); }
 .mega-note { grid-column: 1 / -1; margin: 18px 0 0; padding-top: 16px; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--text-muted); }
 
-@media (max-width: 980px) { .mega { display: none !important; } .main-nav .chev { display: none; } }
+/* Entre 681 et 980 px, la navigation complète et les deux boutons ne tenaient
+   pas dans l'en-tête : la page débordait de 200 px. Le hamburger prend le relais
+   au même seuil que celui où le méga-menu disparaît. */
+@media (max-width: 980px) {
+  .mega { display: none !important; }
+  .main-nav { display: none; }
+  .nav-toggle { display: flex; }
+}
 
 /* Sous 430 px, l'en-tête débordait de 2 px : marque, CTA et hamburger ne
    tiennent pas dans 342 px utiles. On resserre au lieu de laisser scroller. */
