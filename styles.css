@@ -929,6 +929,11 @@ section {
 .link-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
 .link-card strong { display: block; font-size: 1.02rem; margin-bottom: 6px; }
 .link-card span { display: block; font-size: 0.9rem; color: var(--text-muted); }
+.link-card.is-info {
+  box-shadow: none;
+  cursor: default;
+}
+.link-card.is-info:hover { transform: none; box-shadow: none; }
 .link-card.is-soon {
   background: transparent;
   box-shadow: none;

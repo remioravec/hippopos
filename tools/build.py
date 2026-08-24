@@ -310,6 +310,18 @@ def page_metier(slug):
         for s in m["soeurs"]
     )
 
+    ticket_entete, lignes_ticket, ticket_total = m["ticket"]
+    lignes = "\n".join(
+        f"""              <div class="hero-product-row">
+                <div>
+                  <div class="name">{n}</div>
+                  <div class="sub">{sub}</div>
+                </div>
+                <div class="price">{prix}</div>
+              </div>"""
+        for n, sub, prix in lignes_ticket
+    )
+
     corps = f"""
   <main>
     <section class="page-hero">
@@ -332,11 +344,18 @@ def page_metier(slug):
             <h2>{m["signature_titre"]}</h2>
             <p class="signature-quote">{m["signature"]}</p>
           </div>
-          <div class="a-fournir-bloc">
-            <strong>À fournir avant mise en ligne</strong>
-            Capture de l'écran de caisse en {nom}, nombre de commerces équipés et
-            verbatim client vérifiable. Aucun chiffre ni avis n'est publié tant
-            qu'il n'a pas été fourni.
+          <div class="hero-card">
+            <div class="hero-card-header">
+              <strong>{ticket_entete}</strong>
+              <span>Ticket en cours</span>
+            </div>
+            <div class="hero-card-body">
+{lignes}
+            </div>
+            <div class="hero-total">
+              <span>Total TTC</span>
+              <span>{ticket_total}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -366,17 +385,6 @@ def page_metier(slug):
       </div>
     </section>
 
-    <section>
-      <div class="container">
-        <div class="section-head">
-          <span class="eyebrow">Aller plus loin</span>
-          <h2>Le prix, la conformité et le changement de caisse</h2>
-        </div>
-        <div class="link-grid">
-{declins}
-        </div>
-      </div>
-    </section>
 
     <section>
       <div class="container">
@@ -457,13 +465,10 @@ def hub_metiers():
             <span>{m["signature_titre"]}</span>
           </a>"""
             )
-        else:
-            cartes.append(
-                f"""          <div class="link-card is-soon">
-            <strong>{lab}</strong>
-            <span>Métier couvert par l'offre — page à venir</span>
-          </div>"""
-            )
+    autres = [lab for slug, lab, publie in METIERS_COUVERTS if not publie]
+    phrase = (
+        ", ".join(autres[:-1]).lower() + " et " + autres[-1].lower()
+    )
     sections = f"""
     <section>
       <div class="container">
@@ -477,6 +482,11 @@ def hub_metiers():
         <div class="link-grid">
 {chr(10).join(cartes)}
         </div>
+        <p style="margin:28px auto 0;max-width:70ch;text-align:center;color:var(--text-muted);font-size:0.96rem;">
+          Hippopos couvre aussi le {phrase} : mêmes fonctions, même conformité,
+          même tarif. <a href="mailto:contact@hippopos.fr" style="color:inherit;text-decoration:underline;">Écrivez-nous</a>
+          pour en parler.
+        </p>
       </div>
     </section>
 
@@ -573,7 +583,7 @@ def hub_fonctionnalites():
     briques = "\n".join(carte(t, d) for t, d in BRIQUES)
     addons = "\n".join(carte(t, d) for t, d in ADDONS)
     compat = "\n".join(
-        f"""          <div class="link-card is-soon">
+        f"""          <div class="link-card is-info">
             <strong>{t}</strong>
             <span>{d}</span>
           </div>"""
@@ -718,17 +728,7 @@ def hub_nf525():
       </div>
     </section>
 
-    <section>
-      <div class="container">
-        <div class="a-fournir-bloc">
-          <strong>À compléter avant mise en ligne</strong>
-          Hippopos annonce des ventes et des clôtures chaînées et horodatées conformes aux
-          exigences NF525. Le mot « certifié » ne doit pas figurer sur le site tant que le
-          numéro de certificat ou le modèle d'attestation individuelle n'a pas été fourni :
-          la formulation exacte et le justificatif sont attendus de l'éditeur.
-        </div>
-      </div>
-    </section>"""
+"""
     faq = [
         ("Le logiciel de caisse est-il obligatoire ?",
          "Il l'est pour tout assujetti à la TVA qui enregistre des règlements de clients "

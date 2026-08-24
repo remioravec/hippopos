@@ -86,6 +86,11 @@ METIERS = {
         ],
         absent_note="Ces deux fonctions reviennent dans les résultats de « logiciel de caisse "
                     "boulangerie » relevés le 15/08/2026. Hippopos ne les couvre pas aujourd'hui.",
+        ticket=("Boulangerie — 7 h 40", [
+            ("Baguette tradition", "2 × 1,20 €", "2,40 €"),
+            ("Croissants", "4 × 1,30 €", "5,20 €"),
+            ("Chocolats en vrac", "0,340 kg × 26,00 €/kg", "8,84 €"),
+        ], "16,44 €"),
         soeurs=["patisserie", "chocolaterie", "traiteur"],
     ),
     "patisserie": dict(
@@ -114,6 +119,11 @@ METIERS = {
             "Commandes nominatives à l'avance avec acompte",
             "Click and collect et boutique en ligne",
         ],
+        ticket=("Pâtisserie — 11 h 05", [
+            ("Entremets vanille — 6 parts", "1 × 24,00 €", "24,00 €"),
+            ("Éclairs chocolat", "2 × 3,50 €", "7,00 €"),
+            ("Tarte citron — à la part", "3 × 2,70 €", "8,10 €"),
+        ], "39,10 €"),
         soeurs=["boulangerie", "chocolaterie", "traiteur"],
     ),
     "chocolaterie": dict(
@@ -142,6 +152,11 @@ METIERS = {
             "Boutique en ligne et click and collect",
             "Commandes à l'avance avec acompte",
         ],
+        ticket=("Chocolaterie — 16 h 20", [
+            ("Ballotin composé", "0,250 kg × 45,00 €/kg", "11,25 €"),
+            ("Coffret de Noël 100 g", "1 × 18,00 €", "18,00 €"),
+            ("Orangettes", "0,120 kg × 45,00 €/kg", "5,40 €"),
+        ], "34,65 €"),
         soeurs=["patisserie", "boulangerie", "epicerie"],
     ),
     "boucherie": dict(
@@ -169,6 +184,11 @@ METIERS = {
             "Commandes à l'avance avec acompte",
             "Boutique en ligne et click and collect",
         ],
+        ticket=("Boucherie — 10 h 15", [
+            ("Rôti de bœuf", "1,240 kg × 20,00 €/kg", "24,80 €"),
+            ("Saucisses de Toulouse", "6 × 1,20 €", "7,20 €"),
+            ("Bœuf bourguignon — à la part", "2 × 5,50 €", "11,00 €"),
+        ], "43,00 €"),
         soeurs=["charcuterie", "poissonnerie", "traiteur"],
     ),
     "charcuterie": dict(
@@ -196,6 +216,11 @@ METIERS = {
             "Commandes à l'avance avec acompte",
             "Click and collect et boutique en ligne",
         ],
+        ticket=("Charcuterie — 12 h 30", [
+            ("Jambon blanc", "6 tranches × 0,90 €", "5,40 €"),
+            ("Terrine de campagne", "0,320 kg × 19,00 €/kg", "6,08 €"),
+            ("Quiche lorraine — à la part", "2 × 2,80 €", "5,60 €"),
+        ], "17,08 €"),
         soeurs=["boucherie", "traiteur", "epicerie"],
     ),
     "poissonnerie": dict(
@@ -222,6 +247,11 @@ METIERS = {
             "Commandes à l'avance avec acompte",
             "Boutique en ligne et click and collect",
         ],
+        ticket=("Poissonnerie — 9 h 50", [
+            ("Filet de bar", "0,480 kg × 28,00 €/kg", "13,44 €"),
+            ("Moules de bouchot", "1,000 kg × 4,90 €/kg", "4,90 €"),
+            ("Crevettes cuites", "0,300 kg × 29,00 €/kg", "8,70 €"),
+        ], "27,04 €"),
         soeurs=["boucherie", "charcuterie", "traiteur"],
     ),
     "traiteur": dict(
@@ -250,6 +280,11 @@ METIERS = {
         ],
         absent_note="Hippopos couvre la vente au comptoir d'un traiteur, pas l'activité de "
                     "réception sur devis. C'est dit ici pour éviter un essai qui n'aboutira pas.",
+        ticket=("Traiteur — 11 h 45", [
+            ("Salade piémontaise", "0,400 kg × 15,00 €/kg", "6,00 €"),
+            ("Lasagnes — à la part", "2 × 5,50 €", "11,00 €"),
+            ("Terrine de légumes", "0,180 kg × 24,00 €/kg", "4,32 €"),
+        ], "21,32 €"),
         soeurs=["charcuterie", "boucherie", "patisserie"],
     ),
     "epicerie": dict(
@@ -277,6 +312,11 @@ METIERS = {
             "Boutique en ligne et click and collect",
             "Commandes à l'avance avec acompte",
         ],
+        ticket=("Épicerie — 18 h 10", [
+            ("Riz basmati 1 kg", "1 × 3,90 €", "3,90 €"),
+            ("Amandes en vrac", "0,250 kg × 25,00 €/kg", "6,25 €"),
+            ("Huile d'olive 75 cl", "1 × 9,80 €", "9,80 €"),
+        ], "19,95 €"),
         soeurs=["chocolaterie", "traiteur", "boulangerie"],
     ),
 }
