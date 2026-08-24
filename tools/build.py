@@ -18,6 +18,7 @@ import pathlib
 import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
+from icones import ico  # noqa: E402
 from pages import (  # noqa: E402
     METIERS, METIERS_COUVERTS, FAQ_SILO_METIERS, FONCTIONS, FONCTIONS_PUBLIEES,
 )
@@ -322,12 +323,26 @@ def page_metier(slug):
                else f"../../fonctionnalites/#{section}")
         return ancre, url
 
+    ICO_FONCTION = {
+        "vente-au-poids": "poids", "variantes-produit": "variantes",
+        "gestion-de-stock": "stock", "inventaire-guide": "stock",
+        "multi-magasins": "multi-magasins", "fidelite": "fidelite",
+        "etiquettes": "etiquettes", "cloture-de-caisse": "clotures",
+        "comptes-vendeurs": "equipe", "cheques-cadeaux": "cheques-cadeaux",
+    }
     croisements = "\n".join(
         f"""          <a class="link-card" href="{u}">
+            {ico(ICO_FONCTION.get(c, ""))}
             <strong>{a}</strong>
           </a>"""
-        for a, u in (cible_fonction(c) for c in m["croisements"])
+        for c, (a, u) in ((c, cible_fonction(c)) for c in m["croisements"])
     )
+
+    photo_src = m.get("photo")
+    classe_photo = " avec-photo" if photo_src else ""
+    photo = (f'          <img class="hero-photo" src="../../assets/{photo_src}"\n'
+             f'               alt="{m.get("photo_alt", "")}" width="800" height="600" />\n'
+             if photo_src else "")
 
     ticket_entete, lignes_ticket, ticket_total = m["ticket"]
     lignes = "\n".join(
@@ -343,26 +358,20 @@ def page_metier(slug):
 
     corps = f"""
   <main>
+    <!-- 1. Hero — USP et réassurance · 0 lien interne -->
     <section class="page-hero">
       <div class="container">
-        <span class="eyebrow">{m["famille"]}</span>
-        <h1>{m["h1"]}</h1>
-        <p class="lede">{m["lede"]}</p>
-        <div class="hero-cta-row">
-          <a href="{APP}/inscription" class="btn btn-cta">Essayer 14 jours</a>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="container">
-        <div class="signature">
-          <div>
-            <span class="eyebrow">La contrainte du métier</span>
-            <h2>{m["signature_titre"]}</h2>
-            <p class="signature-quote">{m["signature"]}</p>
+        <div>
+          <span class="eyebrow">{m["famille"]}</span>
+          <h1>{m["h1"]}</h1>
+          <p class="lede">{m["lede"]}</p>
+          <div class="hero-cta-row">
+            <a href="{APP}/inscription" class="btn btn-cta">Essayer 14 jours</a>
           </div>
-          <div class="hero-card">
+          <p class="hero-note">Sans engagement · Sans carte bancaire · Votre matériel reste en place</p>
+        </div>
+        <div class="hero-metier{classe_photo}">
+{photo}          <div class="hero-card">
             <div class="hero-card-header">
               <strong>{ticket_entete}</strong>
               <span>Ticket en cours</span>
@@ -379,7 +388,55 @@ def page_metier(slug):
       </div>
     </section>
 
+    <!-- 2. Réassurance — ligne de flottaison · 0 lien -->
+    <div class="trust-strip">
+      <div class="container">
+        <span>Conforme <strong>NF525</strong> · Douchette, balance et imprimante <strong>déjà en place</strong> ·
+              <strong>29 € HT</strong> par mois, sans engagement</span>
+      </div>
+    </div>
+
+    <!-- 3. Peurs et frustrations · 0 lien -->
     <section>
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">La contrainte du métier</span>
+          <h2>{m["signature_titre"]}</h2>
+        </div>
+        <p class="signature-quote" style="max-width:62ch;margin:0 auto;text-align:center;">{m["signature"]}</p>
+      </div>
+    </section>
+
+    <!-- 4. Fonctionnalités — croisement vers l'axe secondaire · 3 liens -->
+    <section class="bande">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Les fonctions qui comptent ici</span>
+          <h2>Ce qu'une caisse de {nom} doit savoir faire</h2>
+        </div>
+        <div class="link-grid">
+{croisements}
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Axe sœur · 2 liens métier + 1 vers la mère -->
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Métiers proches</span>
+          <h2>Les autres métiers de comptoir</h2>
+          <p>Vous cherchez un autre commerce ? Voir les 18 métiers que couvre le
+             <a href="../">logiciel de caisse pour commerce de détail</a>.</p>
+        </div>
+        <div class="link-grid">
+{soeurs}
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. E-E-A-T — ce qui est couvert, et ce qui ne l'est pas -->
+    <section class="bande">
       <div class="container">
         <div class="section-head">
           <span class="eyebrow">Ce que couvre Hippopos</span>
@@ -403,29 +460,34 @@ def page_metier(slug):
       </div>
     </section>
 
-
+    <!-- 7. Step by step — comment ça se met en place · 0 lien -->
     <section>
       <div class="container">
         <div class="section-head">
-          <span class="eyebrow">Les fonctions qui comptent ici</span>
-          <h2>Ce qu'une caisse de {nom} doit savoir faire</h2>
+          <span class="eyebrow">Mise en route</span>
+          <h2>Opérationnel dès le prochain service</h2>
         </div>
-        <div class="link-grid">
-{croisements}
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="container">
-        <div class="section-head">
-          <span class="eyebrow">Métiers proches</span>
-          <h2>Les autres métiers de comptoir</h2>
-          <p>Vous cherchez un autre commerce ? Voir les 18 métiers que couvre le
-             <a href="../">logiciel de caisse pour commerce de détail</a>.</p>
-        </div>
-        <div class="link-grid">
-{soeurs}
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <h3>Créez votre compte</h3>
+            <p>Aucune carte bancaire pour l'essai, aucun matériel à commander.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <h3>Importez votre catalogue</h3>
+            <p>Produits, catégories et prix — un par un ou en une fois.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <h3>Branchez votre balance</h3>
+            <p>Le poids remonte en caisse, plus aucun montant à ressaisir.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <h3>Encaissez</h3>
+            <p>Sur tablette, ordinateur ou votre terminal tactile existant.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -601,14 +663,15 @@ ADDONS = [
 ]
 
 COMPATIBILITES = [
-    ("Douchette code-barres", "Les modèles USB et Bluetooth déjà en place fonctionnent tels quels."),
-    ("Balance connectée", "Le poids est lu par la caisse : plus de montant ressaisi à la main."),
-    ("Imprimante à tickets", "Les imprimantes thermiques existantes restent utilisables."),
+    ("douchette", "Douchette code-barres", "Les modèles USB et Bluetooth déjà en place fonctionnent tels quels."),
+    ("poids", "Balance connectée", "Le poids est lu par la caisse : plus de montant ressaisi à la main."),
+    ("imprimante", "Imprimante à tickets", "Les imprimantes thermiques existantes restent utilisables."),
 ]
 
 
 def hub_fonctionnalites():
     carte = lambda i, t, d: f"""          <div class="feature-card" id="{i}">
+            <div class="feature-icon">{ico(i)}</div>
             <h3>{t}</h3>
             <p>{d}</p>
           </div>"""
@@ -616,10 +679,11 @@ def hub_fonctionnalites():
     addons = "\n".join(carte(i, t, d) for i, t, d in ADDONS)
     compat = "\n".join(
         f"""          <div class="link-card is-info">
+            {ico(i)}
             <strong>{t}</strong>
             <span>{d}</span>
           </div>"""
-        for t, d in COMPATIBILITES
+        for i, t, d in COMPATIBILITES
     )
     sections = f"""
     <section>
