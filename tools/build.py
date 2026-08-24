@@ -187,6 +187,7 @@ def pied(profondeur):
             <li><a href="{base}/mentions-legales.html">Mentions légales</a></li>
             <li><a href="{base}/cgu.html">CGU / CGV</a></li>
             <li><a href="{base}/confidentialite.html">Confidentialité</a></li>
+            <li><a href="mailto:contact@hippopos.fr">Contact</a></li>
           </ul>
         </div>
       </div>
