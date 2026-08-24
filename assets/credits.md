@@ -12,7 +12,7 @@ Recadrées en 4:3, converties en WebP, toutes sous 200 Ko.
 | patisserie | `assets/metiers/patisserie.webp` | — | CC0 | [source](https://www.rawpixel.com/image/5964162/free-public-domain-cc0-photo) |
 | chocolaterie | `assets/metiers/chocolaterie.webp` | — | CC0 | [source](https://www.rawpixel.com/image/5945408/free-public-domain-cc0-photo) |
 | boucherie | `assets/metiers/boucherie.webp` | Butcher shop | CC0 | [source](https://www.rawpixel.com/image/5975314/butcher-shop) |
-| charcuterie | `assets/metiers/charcuterie.webp` | Free prosciutto ham image | CC0 | [source](https://www.rawpixel.com/image/5921767/photo-image-public-domain-green-red) |
+| charcuterie | `assets/metiers/charcuterie.webp` | Free cured ham image | CC0 | [source](https://www.rawpixel.com/image/5914355/image-public-domain-food-free) |
 | poissonnerie | `assets/metiers/poissonnerie.webp` | — | CC0 | [source](https://www.rawpixel.com/image/5964248/free-public-domain-cc0-photo) |
 | traiteur | `assets/metiers/traiteur.webp` | Celebration meal | CC0 | [source](https://www.rawpixel.com/image/448001/free-photo-image-canape-celebration-catering) |
 | epicerie | `assets/metiers/epicerie.webp` | Vegetables in a supermarket | CC0 | [source](https://www.rawpixel.com/image/6082112/vegetables-supermarket) |
