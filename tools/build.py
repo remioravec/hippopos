@@ -89,7 +89,7 @@ def entete(profondeur, actif=""):
   <header class="site-header">
     <div class="container">
       <a href="{r or "/"}" class="brand">
-        <img src="{r}assets/hippopos-logo.svg" alt="Hippopos" style="height: 40px;" />
+        <img src="{r}assets/hippopos-logo.png" alt="Hippopos" style="height: 40px;" />
       </a>
       <nav class="main-nav">
 {liens}
@@ -164,7 +164,7 @@ def pied(profondeur):
       <div class="footer-grid">
         <div class="footer-brand">
           <a href="{r or "/"}" class="brand">
-            <img src="{r}assets/hippopos-logo.svg" alt="Hippopos" style="height: 32px;" />
+            <img src="{r}assets/hippopos-logo.png" alt="Hippopos" style="height: 32px;" />
           </a>
           <p>Le logiciel de caisse pensé pour le commerce indépendant, du comptoir au multi-magasins.</p>
         </div>
@@ -544,12 +544,17 @@ BRIQUES = [
     ("Caisse tactile rapide", "Vente à la pièce ou au poids, variantes, codes-barres, remises et paiements mixtes."),
     ("Conformité NF525", "Ventes et clôtures chaînées et horodatées, journaux consultables, archivage inaltérable."),
     ("Stock et inventaires", "Suivi par produit ou par variante, inventaires guidés, alertes de rupture."),
-    ("Multi-magasins", "Catalogue centralisé, stock indépendant par magasin, transferts en deux temps."),
     ("Clôtures et fond de caisse", "Clôtures jour, mois et année, comptage du fond, entrées et sorties d'espèces."),
-    ("Fidélité clients", "Points, carte à tampons ou cashback : le programme qui correspond au commerce."),
-    ("Étiquettes et codes-barres", "Génération et impression d'étiquettes produit, scan par douchette ou caméra."),
     ("Équipe et permissions", "Un vendeur par membre de l'équipe, code PIN et droits d'accès personnalisés."),
     ("Tickets et reçus", "Ticket imprimable ou envoyé par email, avec logo et coordonnées du magasin."),
+]
+
+# Activables à la demande depuis les paramètres (restructuration du 22/08/2026).
+ADDONS = [
+    ("Multi-magasins", "Catalogue centralisé, stock indépendant par magasin, transferts en deux temps."),
+    ("Fidélité clients", "Points, carte à tampons ou cashback : le programme qui correspond au commerce."),
+    ("Étiquettes et codes-barres", "Génération et impression d'étiquettes produit, scan par douchette ou caméra."),
+    ("Tickets et chèques cadeaux", "Ticket cadeau sans les prix, et chèques cadeaux à code unique dont le solde se suit tout seul."),
 ]
 
 COMPATIBILITES = [
@@ -560,13 +565,12 @@ COMPATIBILITES = [
 
 
 def hub_fonctionnalites():
-    briques = "\n".join(
-        f"""          <div class="feature-card">
+    carte = lambda t, d: f"""          <div class="feature-card">
             <h3>{t}</h3>
             <p>{d}</p>
           </div>"""
-        for t, d in BRIQUES
-    )
+    briques = "\n".join(carte(t, d) for t, d in BRIQUES)
+    addons = "\n".join(carte(t, d) for t, d in ADDONS)
     compat = "\n".join(
         f"""          <div class="link-card is-soon">
             <strong>{t}</strong>
@@ -579,12 +583,20 @@ def hub_fonctionnalites():
       <div class="container">
         <div class="section-head">
           <span class="eyebrow">Vendre et piloter</span>
-          <h2>Les 9 briques d'Hippopos</h2>
-          <p>Tout est compris dans l'abonnement. Aucune de ces briques n'est un module
-             payant à ajouter, à l'exception du multi-magasins qui définit la formule.</p>
+          <h2>Les 6 briques comprises</h2>
+          <p>Ces six briques sont dans l'abonnement dès la première formule, sans supplément
+             et sans réglage préalable.</p>
         </div>
         <div class="features-grid">
 {briques}
+        </div>
+
+        <div class="subsection-head">
+          <h3>Les 4 add-ons activables à la demande</h3>
+          <p>Ils s'activent en un clic depuis les paramètres, uniquement si le commerce en a besoin.</p>
+        </div>
+        <div class="features-grid addons-grid">
+{addons}
         </div>
       </div>
     </section>
@@ -604,9 +616,14 @@ def hub_fonctionnalites():
     </section>"""
     faq = [
         ("Toutes les fonctions sont-elles comprises dans l'abonnement ?",
-         "Oui, à une exception près : la gestion de plusieurs magasins, le stock par magasin "
-         "et les transferts relèvent de la formule Multi-magasins à 69 € HT par mois. Le reste "
-         "est inclus dès la formule Solo."),
+         "Six briques le sont dès la formule Solo : caisse, conformité NF525, stock, clôtures, "
+         "permissions et tickets. Quatre add-ons s'activent à la demande — fidélité, étiquettes "
+         "et chèques cadeaux à partir de la formule Équipe, le multi-magasins avec la formule "
+         "du même nom à 69 € HT par mois."),
+        ("Qu'est-ce qu'un chèque cadeau chez Hippopos ?",
+         "Un code unique remis au client, utilisable en un ou plusieurs paiements, dont le solde "
+         "se met à jour tout seul. À ne pas confondre avec le ticket cadeau, qui est le ticket "
+         "d'achat sans les prix, remis pour offrir un article."),
         ("Hippopos gère-t-il la vente au poids ?",
          "Oui. La balance connectée est lue par la caisse et le montant est porté au ticket "
          "sans ressaisie. Le poids et la pièce cohabitent sur un même ticket."),
@@ -620,12 +637,12 @@ def hub_fonctionnalites():
     return page_hub(
         url="/fonctionnalites/",
         titre="Fonctionnalités d'un logiciel de caisse : les 9 briques utiles",
-        desc="Caisse tactile, stock, inventaires, fidélité, étiquettes, multi-magasins, "
-             "clôtures, permissions et tickets : ce que couvre Hippopos, sans module payant "
-             "caché.",
+        desc="Caisse tactile, stock, clôtures, permissions et tickets compris ; multi-magasins, "
+             "fidélité, étiquettes et chèques cadeaux activables à la demande.",
         h1="Les fonctionnalités d'un logiciel de caisse, brique par brique",
-        lede="Neuf briques couvrent l'encaissement, le catalogue, le stock et la conformité. "
-             "Cette page dit ce qu'elles font — et, à la fin, ce qu'Hippopos ne fait pas.",
+        lede="Six briques comprises couvrent l'encaissement, le catalogue, le stock et la "
+             "conformité ; quatre add-ons s'activent à la demande. Cette page dit ce qu'elles "
+             "font — et, à la fin, ce qu'Hippopos ne fait pas.",
         eyebrow="Fonctionnalités",
         sections=sections,
         faq=faq,
@@ -780,6 +797,7 @@ def hub_tarifs():
               <li>Permissions par vendeur</li>
               <li>Programme de fidélité</li>
               <li>Étiquettes produit</li>
+              <li>Tickets et chèques cadeaux</li>
               <li>Support prioritaire</li>
             </ul>
             <a href="https://app.hippopos.fr/inscription" class="btn btn-cta btn-block">Essayer gratuitement</a>

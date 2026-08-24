@@ -36,6 +36,13 @@ METIERS_COUVERTS = [
     ("magasin-de-decoration", "Magasin de décoration", False),
 ]
 
+# Activables à la demande depuis les paramètres (restructuration du 22/08/2026) :
+# multi-magasins, fidélité, étiquettes et codes-barres, tickets et chèques cadeaux.
+ADDONS_PRODUIT = [
+    "multi-magasins", "fidélité", "étiquettes et codes-barres",
+    "tickets et chèques cadeaux",
+]
+
 # Ce qu'Hippopos ne fait pas — liste produit, identique sur toutes les pages.
 ABSENT_DU_PRODUIT = [
     "écran cuisine", "plan de salle", "commande à table", "click and collect",
@@ -70,8 +77,8 @@ METIERS = {
             "Touches rapides pour les produits phares du matin",
             "Lecture de la balance connectée, sans ressaisie du montant",
             "Clôtures et chaînage conformes NF525",
-            "Étiquettes, codes-barres et programme de fidélité",
-            "Multi-magasins : deuxième point de vente, stock et transferts",
+            "Étiquettes, codes-barres et fidélité — add-ons activables",
+            "Multi-magasins : deuxième point de vente, stock et transferts — add-on",
         ],
         absent=[
             "Monnayeur automatique",
@@ -98,9 +105,10 @@ METIERS = {
             "Variantes produit : format, parfum, nombre de parts",
             "Vente à la pièce, à la part ou au poids",
             "TVA différenciée sur place et à emporter",
-            "Étiquettes produit et codes-barres",
+            "Étiquettes produit et codes-barres — add-on",
             "Clôtures et chaînage conformes NF525",
-            "Fidélité : points, carte à tampons ou cashback",
+            "Fidélité : points, carte à tampons ou cashback — add-on",
+            "Ticket cadeau sans les prix, pour offrir une pièce — add-on",
         ],
         absent=[
             "Commandes nominatives à l'avance avec acompte",
@@ -125,8 +133,9 @@ METIERS = {
             "Vente au poids : ballotin composé pesé en caisse",
             "Variantes : format de coffret, assortiment, saison",
             "Alertes de rupture et inventaires guidés",
-            "Étiquettes produit et codes-barres",
-            "Multi-magasins : stock indépendant et transferts",
+            "Étiquettes produit et codes-barres — add-on",
+            "Multi-magasins : stock indépendant et transferts — add-on",
+            "Chèques cadeaux à code unique, solde suivi automatiquement — add-on",
             "Clôtures et chaînage conformes NF525",
         ],
         absent=[
@@ -181,7 +190,7 @@ METIERS = {
             "TVA différenciée selon les produits",
             "Suivi de stock par produit et par variante",
             "Clôtures et chaînage conformes NF525",
-            "Étiquettes produit et codes-barres",
+            "Étiquettes produit et codes-barres — add-on",
         ],
         absent=[
             "Commandes à l'avance avec acompte",
@@ -207,7 +216,7 @@ METIERS = {
             "Vente au poids et à la pièce",
             "Suivi de stock et inventaires guidés",
             "Clôtures, fond de caisse et chaînage NF525",
-            "Étiquettes produit réimprimables",
+            "Étiquettes produit réimprimables — add-on",
         ],
         absent=[
             "Commandes à l'avance avec acompte",
@@ -261,7 +270,7 @@ METIERS = {
             "Vente au poids pour le vrac, à la pièce pour le reste",
             "Variantes produit : contenance, parfum, lot",
             "Suivi de stock, alertes de rupture, inventaires guidés",
-            "Multi-magasins : stock indépendant et transferts",
+            "Multi-magasins : stock indépendant et transferts — add-on",
             "Clôtures et chaînage conformes NF525",
         ],
         absent=[

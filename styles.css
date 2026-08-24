@@ -390,6 +390,23 @@ section {
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
 }
+.addons-grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+.subsection-head {
+  text-align: center;
+  max-width: 560px;
+  margin: 56px auto 32px;
+}
+.subsection-head h3 {
+  font-size: 1.3rem;
+  margin: 0 0 8px;
+}
+.subsection-head p {
+  color: var(--text-muted);
+  font-size: 0.98rem;
+  margin: 0;
+}
 .feature-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -801,6 +818,7 @@ section {
     height: 26px;
   }
   .features-grid,
+  .addons-grid,
   .steps {
     grid-template-columns: 1fr;
   }
@@ -846,7 +864,6 @@ section {
     box-shadow: none;
   }
 }
-
 /* ==========================================================================
    Gabarits de l'arbre — hub de silo, unité d'achat (métier), page tarifs.
    Ajouté avec les 12 pages du mois d'août 2026 (roadmap contenu, étages 1-2).
