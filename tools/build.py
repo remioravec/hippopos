@@ -15,12 +15,14 @@ Gabarits, dans l'ordre des maquettes SXO du 15/08/2026 :
 """
 import json
 import pathlib
+import re
 import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 from icones import ico  # noqa: E402
 from pages import (  # noqa: E402
     METIERS, METIERS_COUVERTS, FAQ_SILO_METIERS, FONCTIONS, FONCTIONS_PUBLIEES,
+    PEURS, FONCTIONS_DETAIL, CAS, VARIANTES_EXEMPLE,
 )
 
 RACINE = pathlib.Path(__file__).resolve().parent.parent
@@ -76,45 +78,92 @@ def head(titre, desc, url, blocs_ld, profondeur):
 
 
 
-def mega_menu(profondeur):
-    """Méga-menu exhaustif par axe — les deux colonnes du modèle.
+CHEVRON = ('<svg class="chev" width="13" height="13" viewBox="0 0 24 24" fill="none"'
+           ' stroke="currentColor" stroke-width="2.4" stroke-linecap="round"'
+           ' stroke-linejoin="round" aria-hidden="true">'
+           '<polyline points="6 9 12 15 18 9"></polyline></svg>')
 
-    La colonne Métiers porte la mère puis les 18 métiers ; celle des
-    fonctionnalités les 6 briques comprises et les 4 add-ons. Les métiers sans
-    page publiée sont listés sans lien : le menu dit l'offre, pas l'état de
-    production.
+
+def _axes(base):
+    """Le contenu des deux axes, partagé par le méga-menu et le menu mobile.
+
+    Un seul jeu de données pour les deux surfaces : ce qui s'ouvre au doigt dit
+    exactement ce qui s'ouvre à la souris. Les métiers sans page publiée sont
+    listés sans lien — le menu dit l'offre, pas l'état de production.
     """
+    return [
+        ("metiers", "Métiers", f"{base}/logiciel-de-caisse/",
+         "Logiciel de caisse pour commerce de détail",
+         [(f"{base}/logiciel-de-caisse/{sl}/" if pub else None,
+           "m-" + sl if ico("m-" + sl) else "m-generique", lab)
+          for sl, lab, pub in METIERS_COUVERTS]),
+        ("fonctionnalites", "Fonctionnalités", f"{base}/fonctionnalites/",
+         "Les fonctionnalités d'un logiciel de caisse",
+         [(f"{base}/fonctionnalites/#{i}", i, t) for i, t, _ in BRIQUES + ADDONS]),
+    ]
+
+
+def mega_menu(profondeur):
+    """Méga-menu de bureau — les deux colonnes du modèle, ouvertes par le chevron."""
     base = ("../" * profondeur).rstrip("/") or "."
-    metiers = "\n".join(
-        (f'            <a href="{base}/logiciel-de-caisse/{sl}/">{ico("m-" + sl)}{lab}</a>'
-         if pub else f'            <span>{lab}</span>')
-        for sl, lab, pub in METIERS_COUVERTS
-    )
-    fonctions = "\n".join(
-        f'            <a href="{base}/fonctionnalites/#{i}">{ico(i)}{t}</a>'
-        for i, t, _ in BRIQUES + ADDONS
-    )
+    colonnes = []
+    for _, titre, url_mere, libelle_mere, items in _axes(base):
+        lignes = "\n".join(
+            f'            <a href="{u}">{ico(i)}{lab}</a>' if u
+            else f'            <span>{ico(i)}{lab}</span>'
+            for u, i, lab in items
+        )
+        colonnes.append(f"""          <div>
+            <h4>{titre}</h4>
+            <a class="mega-mere" href="{url_mere}">{libelle_mere}</a>
+            <div class="mega-liste">
+{lignes}
+            </div>
+          </div>""")
     return f"""
       <div class="mega" id="mega" data-ouvert="false">
-          <div>
-            <h4>Métiers</h4>
-            <a class="mega-mere" href="{base}/logiciel-de-caisse/">Logiciel de caisse pour commerce de détail</a>
-            <div class="mega-liste">
-{metiers}
-            </div>
-          </div>
-          <div>
-            <h4>Fonctionnalités</h4>
-            <a class="mega-mere" href="{base}/fonctionnalites/">Les fonctionnalités d'un logiciel de caisse</a>
-            <div class="mega-liste">
-{fonctions}
-            </div>
-          </div>
+{chr(10).join(colonnes)}
           <p class="mega-note">
             Conformité et tarifs : <a href="{base}/nf525/">logiciel de caisse certifié</a> ·
             <a href="{base}/tarifs/">prix d'un logiciel de caisse</a>
           </p>
       </div>"""
+
+
+def menu_mobile(profondeur):
+    """Menu mobile — même arborescence que le méga-menu, en accordéon.
+
+    Le libellé reste un lien vers la mère ; c'est le chevron, cible de 44 px,
+    qui déplie la liste. Sans cela, les 18 métiers et les 10 fonctions étaient
+    inatteignables au doigt : le menu mobile s'arrêtait aux quatre axes.
+    """
+    base = ("../" * profondeur).rstrip("/") or "."
+    sous = {"/logiciel-de-caisse/": "metiers", "/fonctionnalites/": "fonctionnalites"}
+    contenus = {cle: items for cle, _, _, _, items in _axes(base)}
+    lignes = []
+    for u, lab in SILOS:
+        cle = sous.get(u)
+        if cle:
+            items = contenus[cle]
+            liste = "\n".join(
+                f'          <a href="{lu}">{ico(i)}{l}</a>' if lu
+                else f'          <span>{ico(i)}{l}</span>'
+                for lu, i, l in items
+            )
+            lignes.append(f"""      <div class="m-groupe">
+        <div class="m-ligne">
+          <a href="{base}{u}">{lab}</a>
+          <button type="button" class="m-plus" data-sous="m-{cle}"
+                  aria-expanded="false" aria-controls="m-{cle}"
+                  aria-label="Afficher les {lab.lower()}">{CHEVRON}</button>
+        </div>
+        <div class="m-sous" id="m-{cle}" hidden>
+{liste}
+        </div>
+      </div>""")
+        else:
+            lignes.append(f'      <a href="{base}{u}">{lab}</a>')
+    return "\n".join(lignes)
 
 
 def entete(profondeur, actif=""):
@@ -124,17 +173,12 @@ def entete(profondeur, actif=""):
         (f'        <a href="{r.rstrip("/") or "."}{u}" class="mega-btn"'
          f' data-mega aria-expanded="false" aria-controls="mega"'
          + (' aria-current="page"' if u == actif else "")
-         + f'>{lab}<svg class="chev" width="13" height="13" viewBox="0 0 24 24" fill="none"'
-           ' stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"'
-           ' aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></a>'
+         + f">{lab}{CHEVRON}</a>"
          if u in AXES else
          f'        <a href="{r.rstrip("/") or "."}{u}"'
          + (' aria-current="page"' if u == actif else "")
          + f">{lab}</a>")
         for u, lab in SILOS
-    )
-    liens_mobile = "\n".join(
-        f'      <a href="{r.rstrip("/") or "."}{u}">{lab}</a>' for u, lab in SILOS
     )
     return f"""<body>
   <header class="site-header">
@@ -162,7 +206,7 @@ def entete(profondeur, actif=""):
       </div>
     </div>
     <nav class="mobile-nav" id="mobileNav">
-{liens_mobile}
+{menu_mobile(profondeur)}
       <a href="{APP}">Se connecter</a>
       <a href="{APP}/inscription" class="btn btn-cta">Essayer gratuitement</a>
     </nav>
@@ -331,6 +375,211 @@ def faq_metier(nom):
     ]
 
 
+# --------------------------------------------------------------------------
+# Gabarit — sections d'une page métier : peurs, puis fonctionnalités
+# --------------------------------------------------------------------------
+# Le modèle Combo pose une alternance texte / visuel, une section par
+# fonctionnalité. Les visuels sont construits en HTML : aucune capture, aucun
+# écran inventé qui vieillirait mal — un panneau sobre, marqué « Exemple », qui
+# montre la donnée dont parle la section.
+
+def bloc_peurs(slug, nom):
+    """Trois contraintes du métier, illustrées — au lieu d'un paragraphe centré."""
+    cartes = "\n".join(
+        f"""          <div class="peur-card">
+            <div class="peur-ico">{ico(i)}</div>
+            <h3>{titre}</h3>
+            <p>{texte}</p>
+          </div>"""
+        for i, titre, texte in PEURS[slug]
+    )
+    return f"""    <!-- 3. Peurs et frustrations · 0 lien -->
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Ce qui coince au comptoir</span>
+          <h2>Les trois contraintes d'une caisse de {nom}</h2>
+        </div>
+        <div class="peur-grid">
+{cartes}
+        </div>
+      </div>
+    </section>
+"""
+
+
+def _ligne_panneau(gauche, droite, sous="", ton=""):
+    s = f'<span class="p-sub">{sous}</span>' if sous else ""
+    return (f'            <div class="p-ligne{ton}">'
+            f'<div><span class="p-nom">{gauche}</span>{s}</div>'
+            f'<span class="p-val">{droite}</span></div>')
+
+
+def panneau(cle, slug, m):
+    """Le visuel d'une section de fonctionnalité — construit, jamais capturé."""
+    lignes_ticket = m["ticket"][1]
+
+    if cle == "vente-au-poids":
+        n, sub, prix = next((l for l in lignes_ticket if " kg × " in l[1]), lignes_ticket[0])
+        poids, tarif = (sub.split(" × ") + [""])[:2]
+        corps = f"""            <div class="p-balance">
+              <span class="p-poids">{poids}</span>
+              <span class="p-tarif">{tarif}</span>
+            </div>
+{_ligne_panneau(n, prix, "Ligne créée par la balance")}"""
+        return _panneau("Balance connectée", corps)
+
+    if cle == "variantes-produit":
+        produit, variantes = VARIANTES_EXEMPLE[slug]
+        puces = "\n".join(_ligne_panneau(v, p) for v, p in variantes)
+        return _panneau("Fiche produit",
+                        f'            <div class="p-mere">{produit}</div>\n{puces}')
+
+    if cle == "gestion-de-stock":
+        n1, n2, n3 = [l[0] for l in lignes_ticket]
+        corps = "\n".join([
+            _ligne_panneau(n1, "24", "En rayon"),
+            _ligne_panneau(n2, "2,4 kg", "Seuil d'alerte atteint", " est-alerte"),
+            _ligne_panneau(n3, "31", "En rayon"),
+        ])
+        return _panneau("Stock", corps)
+
+    if cle == "inventaire-guide":
+        n1, n2, n3 = [l[0] for l in lignes_ticket]
+        corps = "\n".join([
+            _ligne_panneau(n1, "= 0", "Théorique 24 · compté 24"),
+            _ligne_panneau(n2, "− 3", "Théorique 15 · compté 12", " est-alerte"),
+            _ligne_panneau(n3, "= 0", "Théorique 31 · compté 31"),
+        ])
+        return _panneau("Inventaire en cours", corps)
+
+    if cle == "cloture-de-caisse":
+        corps = "\n".join([
+            _ligne_panneau("Espèces", "312,40 €"),
+            _ligne_panneau("Carte bancaire", "1 048,60 €"),
+            _ligne_panneau("Fond de caisse compté", "150,00 €"),
+            _ligne_panneau("Écart", "0,00 €", "", " est-ok"),
+        ])
+        return _panneau("Clôture du jour", corps)
+
+    if cle == "comptes-vendeurs":
+        corps = "\n".join([
+            _ligne_panneau("Responsable", "Tous les droits", "Remises · annulations · clôtures"),
+            _ligne_panneau("Vendeur", "Encaissement", "Ouverture au code PIN"),
+            _ligne_panneau("Extra", "Encaissement", "Ni réglages ni chiffres du magasin"),
+        ])
+        return _panneau("Comptes ouverts", corps)
+
+    if cle == "multi-magasins":
+        corps = "\n".join([
+            _ligne_panneau("Magasin 1", "24", "Stock propre"),
+            _ligne_panneau("Magasin 2", "3", "Stock propre", " est-alerte"),
+            _ligne_panneau("Transfert de 6 pièces", "Envoyé", "À recevoir côté magasin 2"),
+        ])
+        return _panneau("Catalogue centralisé", corps)
+
+    if cle == "etiquettes":
+        n = lignes_ticket[0][0]
+        corps = f"""            <div class="p-etiquette">
+              <span class="p-etiq-nom">{n}</span>
+              <span class="p-etiq-prix">{lignes_ticket[0][2]}</span>
+              <span class="p-codebarres" aria-hidden="true"></span>
+              <span class="p-sub">Code produit généré par la fiche</span>
+            </div>"""
+        return _panneau("Étiquette à imprimer", corps)
+
+    if cle == "cheques-cadeaux":
+        corps = "\n".join([
+            _ligne_panneau("Montant émis", "50,00 €"),
+            _ligne_panneau("Première utilisation", "− 27,50 €"),
+            _ligne_panneau("Solde restant", "22,50 €", "Suivi par la caisse", " est-ok"),
+        ])
+        return _panneau("Chèque cadeau · code unique", corps)
+
+    if cle == "fidelite":
+        corps = "\n".join([
+            _ligne_panneau("Mécanique choisie", "Carte à tampons"),
+            _ligne_panneau("Compteur du client", "7 / 10"),
+            _ligne_panneau("Récompense", "Au 10e passage", "", " est-ok"),
+        ])
+        return _panneau("Programme de fidélité", corps)
+
+    return ""
+
+
+def _panneau(titre, corps):
+    return f"""          <div class="panneau">
+            <div class="p-tete"><span>{titre}</span><span class="p-tag">Exemple</span></div>
+{corps}
+          </div>"""
+
+
+def section_fonction(rang, cle, slug, m, ancre, url):
+    """Une fonctionnalité, une section : texte d'un côté, visuel de l'autre."""
+    d = FONCTIONS_DETAIL[cle]
+    puces = "\n".join(f"            <li>{p}</li>" for p in d["puces"])
+    badge = ('<span class="p-tag p-addon">Activable à la demande</span>'
+             if d["addon"] else "")
+    inverse = " est-inverse" if rang % 2 else ""
+    fond = " bande" if rang % 2 else ""
+    return f"""    <section class="fonction{inverse}{fond}">
+      <div class="container">
+        <div class="fonction-texte">
+          <span class="eyebrow">{ico(ICO_FONCTION.get(cle, ""))} Fonctionnalité {rang + 1}</span>
+          <h3>{d["titre"]} {badge}</h3>
+          <p class="fonction-chapeau">{d["chapeau"]}</p>
+          <p class="fonction-cas">{CAS[slug][cle]}</p>
+          <ul class="check-list">
+{puces}
+          </ul>
+          <p class="lien-fonction-ligne"><a class="lien-fonction" href="{url}">{ancre}</a></p>
+        </div>
+        <div class="fonction-visuel">
+{panneau(cle, slug, m)}
+        </div>
+      </div>
+    </section>
+"""
+
+
+ICO_FONCTION = {
+    "vente-au-poids": "poids", "variantes-produit": "variantes",
+    "gestion-de-stock": "stock", "inventaire-guide": "stock",
+    "multi-magasins": "multi-magasins", "fidelite": "fidelite",
+    "etiquettes": "etiquettes", "cloture-de-caisse": "clotures",
+    "comptes-vendeurs": "equipe", "cheques-cadeaux": "cheques-cadeaux",
+}
+
+
+REASSURANCE = [
+    ("conformite", "Conforme <strong>NF525</strong>", "ventes chaînées et horodatées"),
+    ("horloge", "<strong>14 jours</strong> d'essai", "sans carte bancaire"),
+    ("cadenas", "Sans engagement", "résiliable à tout moment"),
+    ("douchette", "Votre matériel <strong>reste en place</strong>", "douchette, balance, imprimante"),
+]
+
+
+def bande_reassurance():
+    """Ligne de flottaison — quatre garanties, pas des logos clients.
+
+    Le modèle place ici une rangée de logos. Aucun logo client n'a été fourni :
+    en inventer serait faux, alors la bande porte ce qui est vérifiable.
+    """
+    items = "\n".join(
+        f"""        <div class="reassurance-item">
+          {ico(i)}
+          <span><span class="r-titre">{titre}</span><span class="r-sous">{sous}</span></span>
+        </div>"""
+        for i, titre, sous in REASSURANCE
+    )
+    return f"""    <div class="trust-strip">
+      <div class="container reassurance">
+{items}
+      </div>
+    </div>
+"""
+
+
 def page_metier(slug):
     m = METIERS[slug]
     url = f"/logiciel-de-caisse/{slug}/"
@@ -375,19 +624,9 @@ def page_metier(slug):
                else f"../../fonctionnalites/#{section}")
         return ancre, url
 
-    ICO_FONCTION = {
-        "vente-au-poids": "poids", "variantes-produit": "variantes",
-        "gestion-de-stock": "stock", "inventaire-guide": "stock",
-        "multi-magasins": "multi-magasins", "fidelite": "fidelite",
-        "etiquettes": "etiquettes", "cloture-de-caisse": "clotures",
-        "comptes-vendeurs": "equipe", "cheques-cadeaux": "cheques-cadeaux",
-    }
-    croisements = "\n".join(
-        f"""          <a class="link-card" href="{u}">
-            {ico(ICO_FONCTION.get(c, ""))}
-            <strong>{a}</strong>
-          </a>"""
-        for c, (a, u) in ((c, cible_fonction(c)) for c in m["croisements"])
+    fonctions = "\n".join(
+        section_fonction(rang, c, slug, m, *cible_fonction(c))
+        for rang, c in enumerate(m["croisements"])
     )
 
     photo_src = m.get("photo")
@@ -441,37 +680,19 @@ def page_metier(slug):
     </section>
 
     <!-- 2. Réassurance — ligne de flottaison · 0 lien -->
-    <div class="trust-strip">
-      <div class="container">
-        <span>Conforme <strong>NF525</strong> · Douchette, balance et imprimante <strong>déjà en place</strong> ·
-              <strong>29 € HT</strong> par mois, sans engagement</span>
-      </div>
-    </div>
-
-    <!-- 3. Peurs et frustrations · 0 lien -->
-    <section>
+{bande_reassurance()}
+{bloc_peurs(slug, nom)}
+    <!-- 4. Fonctionnalités — une section par fonction · 3 liens -->
+    <section class="fonctions-tete">
       <div class="container">
         <div class="section-head">
-          <span class="eyebrow">La contrainte du métier</span>
-          <h2>{m["signature_titre"]}</h2>
-        </div>
-        <p class="signature-quote" style="max-width:62ch;margin:0 auto;text-align:center;">{m["signature"]}</p>
-      </div>
-    </section>
-
-    <!-- 4. Fonctionnalités — croisement vers l'axe secondaire · 3 liens -->
-    <section class="bande">
-      <div class="container">
-        <div class="section-head">
-          <span class="eyebrow">Les fonctions qui comptent ici</span>
+          <span class="eyebrow">{m["signature_titre"]}</span>
           <h2>Ce qu'une caisse de {nom} doit savoir faire</h2>
-        </div>
-        <div class="link-grid">
-{croisements}
+          <p>{m["signature"]}</p>
         </div>
       </div>
     </section>
-
+{fonctions}
     <!-- 5. Axe sœur · 2 liens métier + 1 vers la mère -->
     <section>
       <div class="container">
@@ -1044,12 +1265,39 @@ def hub_tarifs():
     )
 
 
+def synchroniser_accueil():
+    """Réaligne l'en-tête de l'accueil sur `entete(0)`.
+
+    `index.html` est écrit à la main par Timothy : on n'y touche qu'à l'en-tête,
+    pour qu'une entrée ajoutée au menu ne manque jamais sur la page la plus vue.
+    """
+    f = RACINE / "index.html"
+    s = f.read_text(encoding="utf-8")
+    d = s.index('  <header class="site-header">')
+    fin = s.index("  </header>", d) + len("  </header>")
+    neuf = entete(0).split("<body>\n", 1)[1].rstrip()
+    s = s[:d] + neuf + s[fin:]
+
+    # La bande de réassurance, elle aussi, pour que l'accueil et les pages
+    # métier ne racontent pas la même promesse de deux façons différentes.
+    # Bornée par l'indentation : compter les </div> échouait dès que la bande
+    # avait déjà été remplacée par la version imbriquée.
+    s = re.sub(r'    <div class="trust-strip">.*?\n    </div>',
+               lambda _: bande_reassurance().rstrip(), s, count=1, flags=re.S)
+
+    if s == f.read_text(encoding="utf-8"):
+        return "index.html (déjà à jour)"
+    f.write_text(s, encoding="utf-8")
+    return "index.html (en-tête et réassurance resynchronisés)"
+
+
 def main():
     faits = [hub_metiers(), hub_fonctionnalites(), hub_nf525(), hub_tarifs()]
     faits += [page_metier(s) for s in METIERS]
+    faits.append(synchroniser_accueil())
     for f in faits:
         print("écrit", f)
-    print(f"\n{len(faits)} pages générées.")
+    print(f"\n{len(faits)} fichiers écrits.")
 
 
 if __name__ == "__main__":

@@ -69,6 +69,212 @@ ABSENT_DU_PRODUIT = [
 ]
 
 # --------------------------------------------------------------------------
+# Peurs et frustrations, par métier — trois par page
+# --------------------------------------------------------------------------
+# Règle : une peur n'est retenue que si le produit y répond. Lister une
+# contrainte qu'Hippopos ne traite pas (commande à l'avance, plan de salle)
+# ferait venir des essais qui n'aboutissent pas.
+
+PEURS = {
+    "boulangerie": [
+        ("horloge", "Le coup de feu de 7 h 30",
+         "Vingt personnes, des paniers à trois articles. Une caisse qui demande trois écrans pour une baguette fabrique la file toute seule."),
+        ("calcul", "Le vrac converti de tête",
+         "Chocolats, brioches à la coupe : le prix au kilo se calcule au comptoir, et l'écart ne se voit qu'à l'inventaire."),
+        ("oeil", "Deux points de vente, deux vérités",
+         "Le fournil et le dépôt ne tiennent pas le même catalogue, et personne ne sait lequel fait foi."),
+    ],
+    "patisserie": [
+        ("variantes", "Le même gâteau en six déclinaisons",
+         "Six parts, huit parts, vanille ou chocolat : autant de prix, et une caisse qui n'en connaît qu'un."),
+        ("calcul", "La part et le kilo dans le même panier",
+         "Un entremets à l'unité, une tarte à la part, des chocolats au poids : trois façons de compter au même comptoir."),
+        ("etiquettes", "L'étiquette réécrite au feutre",
+         "La vitrine change tous les matins. Le prix affiché finit par ne plus être celui de la caisse."),
+    ],
+    "chocolaterie": [
+        ("calcul", "Le ballotin composé au gramme",
+         "Le client choisit pièce par pièce, la balance affiche 0,250 kg, et le prix se pose pendant qu'on emballe."),
+        ("calendrier", "L'année qui se joue en trois semaines",
+         "Décembre concentre l'essentiel du chiffre. La boutique éphémère ouvre, et le catalogue doit suivre le jour même."),
+        ("cheques-cadeaux", "Le chèque cadeau suivi au carnet",
+         "Un numéro noté à la main, un solde retenu de mémoire : personne ne sait ce qui reste à consommer."),
+    ],
+    "boucherie": [
+        ("calcul", "Le poids retapé à la main",
+         "La balance affiche, le vendeur ressaisit. Un chiffre inversé, et la marge part avec le rôti."),
+        ("cadenas", "Qui a passé cette remise ?",
+         "Trois personnes derrière le comptoir, une seule caisse, aucun moyen de savoir qui a annulé la ligne."),
+        ("alerte", "Le fond de caisse qui ne tombe jamais juste",
+         "Le soir, l'écart de quelques euros se constate sans jamais s'expliquer."),
+    ],
+    "charcuterie": [
+        ("calcul", "La tranche, la barquette et le kilo",
+         "Six tranches de jambon, une terrine au poids, une quiche à la part : trois unités de vente sur le même ticket."),
+        ("variantes", "Le même produit en trois formats",
+         "Entière, demie, à la coupe : chaque format a son prix, et la caisse n'en retient qu'un."),
+        ("etiquettes", "L'étiquette qui ne suit pas le prix",
+         "Le tarif bouge en vitrine mais pas en caisse — ou l'inverse, et c'est le client qui le remarque."),
+    ],
+    "poissonnerie": [
+        ("calcul", "Le poids ressaisi",
+         "La balance affiche 0,480 kg, le vendeur tape 0,48 ou 480. Deux tickets, deux montants, un seul poisson."),
+        ("horloge", "La clôture à 13 h",
+         "L'étal ferme, il faut compter la caisse et repartir. La clôture doit tenir en quelques minutes."),
+        ("etiquettes", "Le cours du jour",
+         "Les prix bougent d'un matin à l'autre. Les reprendre produit par produit prend le temps qu'on n'a pas."),
+    ],
+    "traiteur": [
+        ("calcul", "La barquette pesée devant le client",
+         "Salade au poids, lasagnes à la part, terrine au kilo : le prix se pose à la balance, pas au clavier."),
+        ("variantes", "La même recette en trois contenants",
+         "250 g, 500 g ou au poids : trois prix pour un seul plat, et une caisse qui n'en connaît qu'un."),
+        ("cadenas", "L'extra du samedi",
+         "Un renfort ponctuel derrière le comptoir doit encaisser, sans accéder aux réglages ni aux chiffres du magasin."),
+    ],
+    "epicerie": [
+        ("rupture", "La rupture découverte en rayon",
+         "Le produit manque au moment où le client le demande. La commande, elle, est partie sans lui."),
+        ("horloge", "L'inventaire du dimanche",
+         "Des centaines de références comptées au stylo, puis ressaisies. Une journée entière, et un résultat déjà faux le lundi."),
+        ("oeil", "Deux boutiques, un seul catalogue",
+         "Le même produit, deux prix, deux stocks. L'un des deux est faux, et on ne sait pas lequel."),
+    ],
+}
+
+# --------------------------------------------------------------------------
+# Le détail d'une fonctionnalité, vue depuis une page métier
+# --------------------------------------------------------------------------
+# `addon` marque les quatre modules activables à la demande depuis les
+# paramètres (restructuration du 22/08/2026) : les présenter comme compris
+# serait faux.
+# `panneau` désigne le visuel construit en HTML par build.py.
+
+FONCTIONS_DETAIL = {
+    "vente-au-poids": dict(
+        titre="La balance parle à la caisse",
+        chapeau="Le poids remonte dans la ligne de vente. Plus de conversion de tête, plus de montant ressaisi.",
+        puces=["Prix à la pièce, au kilo ou aux cent grammes sur le même ticket",
+               "Poids lu par la balance déjà en place, ou saisi si elle n'est pas connectée",
+               "Tare et correction possibles avant de valider la ligne"],
+        panneau="poids", addon=False),
+    "variantes-produit": dict(
+        titre="Un produit, toutes ses déclinaisons",
+        chapeau="Taille, parfum, format : une seule fiche produit, autant de prix que de variantes.",
+        puces=["Une fiche mère et ses variantes, au lieu d'autant de produits distincts",
+               "Un prix propre à chaque variante",
+               "Un stock suivi variante par variante"],
+        panneau="variantes", addon=False),
+    "gestion-de-stock": dict(
+        titre="Le stock se tient à mesure qu'on vend",
+        chapeau="Chaque vente décrémente le stock, et l'alerte tombe avant la rupture, pas après.",
+        puces=["Suivi par produit ou par variante",
+               "Alerte de rupture au seuil que vous fixez",
+               "Entrées de marchandise enregistrées à la réception"],
+        panneau="stock", addon=False),
+    "inventaire-guide": dict(
+        titre="L'inventaire sans le stylo",
+        chapeau="Un parcours guidé, référence après référence, avec l'écart affiché au fur et à mesure.",
+        puces=["Comptage guidé produit par produit",
+               "Écart entre stock théorique et stock compté, visible immédiatement",
+               "Validation qui met tout le stock à jour d'un coup"],
+        panneau="inventaire", addon=False),
+    "cloture-de-caisse": dict(
+        titre="La clôture en quelques minutes",
+        chapeau="Comptage du fond, ventilation par moyen de paiement, écart calculé : la journée se ferme sans reprendre les tickets.",
+        puces=["Clôtures jour, mois et année, chaînées et horodatées",
+               "Total par moyen de paiement, écart de caisse affiché",
+               "Entrées et sorties d'espèces tracées"],
+        panneau="clotures", addon=False),
+    "comptes-vendeurs": dict(
+        titre="Chaque vente porte un nom",
+        chapeau="Un compte par personne, un code PIN, et des droits qui s'arrêtent là où ils doivent s'arrêter.",
+        puces=["Ouverture de session au code PIN, en deux secondes",
+               "Remises, annulations et clôtures réservées à qui vous décidez",
+               "Ventes attribuées au vendeur qui les a passées"],
+        panneau="equipe", addon=False),
+    "multi-magasins": dict(
+        titre="Plusieurs magasins, un seul catalogue",
+        chapeau="Le catalogue est centralisé, le stock reste propre à chaque magasin, les transferts se font en deux temps.",
+        puces=["Un catalogue et des prix tenus au même endroit",
+               "Un stock indépendant par magasin",
+               "Transfert envoyé d'un côté, reçu de l'autre"],
+        panneau="multi-magasins", addon=True),
+    "etiquettes": dict(
+        titre="L'étiquette imprimée depuis la fiche produit",
+        chapeau="Le prix de l'étiquette est celui de la caisse, parce que c'est la même donnée.",
+        puces=["Génération d'étiquettes produit avec code-barres",
+               "Impression par lot après un changement de prix",
+               "Scan par douchette existante ou par la caméra"],
+        panneau="etiquettes", addon=True),
+    "cheques-cadeaux": dict(
+        titre="Le chèque cadeau qui se suit tout seul",
+        chapeau="Un code unique par chèque, un solde tenu par la caisse, et un ticket cadeau sans les prix.",
+        puces=["Code unique généré à l'émission",
+               "Solde décrémenté à chaque utilisation, partielle ou totale",
+               "Ticket cadeau imprimable sans les montants"],
+        panneau="cheques-cadeaux", addon=True),
+    "fidelite": dict(
+        titre="Le programme de fidélité qui correspond au commerce",
+        chapeau="Points, carte à tampons ou cashback : un seul mécanisme, choisi une fois, appliqué en caisse.",
+        puces=["Points, tampons ou cashback, au choix",
+               "Compteur mis à jour à l'encaissement",
+               "Solde consultable depuis la fiche client"],
+        panneau="fidelite", addon=True),
+}
+
+# Le cas concret, métier par métier : ce que la fonction change à ce comptoir-là.
+CAS = {
+    "boulangerie": {
+        "vente-au-poids": "Les chocolats en vrac partent au poids, la baguette à la pièce : le même ticket encaisse les deux sans changer d'écran.",
+        "etiquettes": "Une hausse du prix du beurre, et les étiquettes de la vitrine se réimpriment en un lot, au tarif que la caisse applique déjà.",
+        "multi-magasins": "Le fournil tient le catalogue, le dépôt le reçoit. Chacun garde son stock, personne ne ressaisit deux fois.",
+    },
+    "patisserie": {
+        "variantes-produit": "L'entremets vanille existe en 6, 8 et 10 parts. Une fiche, trois prix, et le vendeur choisit la taille au moment de servir.",
+        "vente-au-poids": "Les chocolats et les mignardises se vendent au poids sur le même ticket qu'un gâteau à l'unité.",
+        "etiquettes": "La vitrine change chaque matin : les étiquettes se réimpriment avec les prix du jour, sans passer par le feutre.",
+    },
+    "chocolaterie": {
+        "vente-au-poids": "Le ballotin se compose pièce par pièce, la balance donne le poids, la caisse applique le prix au kilo.",
+        "multi-magasins": "La boutique de décembre ouvre avec le catalogue de la maison, et son stock à elle.",
+        "cheques-cadeaux": "Le chèque émis en novembre est consommé en deux fois en janvier : le solde suit sans carnet.",
+    },
+    "boucherie": {
+        "vente-au-poids": "Le rôti est pesé, le poids remonte dans la ligne, le prix au kilo s'applique : rien n'est retapé.",
+        "comptes-vendeurs": "Chacun ouvre sa session au PIN. La remise et l'annulation restent réservées à qui vous désignez.",
+        "cloture-de-caisse": "À la fermeture, le comptage du fond et la ventilation par moyen de paiement donnent l'écart tout de suite.",
+    },
+    "charcuterie": {
+        "vente-au-poids": "Six tranches de jambon, une terrine pesée, une quiche à la part : trois unités de vente, un seul ticket.",
+        "variantes-produit": "La terrine existe entière, en demie et à la coupe. Une fiche produit, trois prix.",
+        "etiquettes": "Le prix change une fois, dans la fiche produit. L'étiquette de vitrine et la caisse disent la même chose.",
+    },
+    "poissonnerie": {
+        "vente-au-poids": "Le filet est pesé devant le client : 0,480 kg au cours du jour, sans conversion de tête.",
+        "cloture-de-caisse": "L'étal ferme à 13 h. Le comptage, la ventilation et l'écart tiennent dans le temps du rangement.",
+        "etiquettes": "Le cours du jour se saisit une fois et les étiquettes de l'étal repartent au bon prix.",
+    },
+    "traiteur": {
+        "vente-au-poids": "La barquette est pesée devant le client, la tare est déduite, le prix au kilo s'applique.",
+        "variantes-produit": "La salade existe en 250 g, en 500 g et au poids. Une fiche, trois façons de la vendre.",
+        "comptes-vendeurs": "L'extra du samedi encaisse avec son propre code, sans accéder aux réglages ni aux chiffres.",
+    },
+    "epicerie": {
+        "gestion-de-stock": "Chaque passage en caisse décrémente le stock, et l'alerte tombe au seuil fixé, avant le rayon vide.",
+        "inventaire-guide": "L'inventaire se fait référence après référence, l'écart s'affiche à mesure, et la validation met tout à jour d'un coup.",
+        "multi-magasins": "Les deux boutiques partagent un catalogue et gardent chacune leur stock. Le transfert se voit des deux côtés.",
+    },
+}
+
+# Déclinaisons montrées dans le visuel « variantes », par métier.
+VARIANTES_EXEMPLE = {
+    "patisserie": ("Entremets vanille", [("6 parts", "24,00 €"), ("8 parts", "32,00 €"), ("10 parts", "40,00 €")]),
+    "charcuterie": ("Terrine de campagne", [("Entière", "18,00 €"), ("Demie", "9,50 €"), ("À la coupe", "19,00 €/kg")]),
+    "traiteur": ("Salade piémontaise", [("Barquette 250 g", "3,75 €"), ("Barquette 500 g", "7,50 €"), ("Au poids", "15,00 €/kg")]),
+}
+
+# --------------------------------------------------------------------------
 # Étage 2 — les 8 pages métier d'août
 # --------------------------------------------------------------------------
 # couvert  : fonctions réellement au produit (lues sur la home du 15/08)

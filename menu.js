@@ -4,11 +4,37 @@
   var nav = document.getElementById('mobileNav');
   if (!toggle || !nav) return;
 
+  var plus = [].slice.call(nav.querySelectorAll('.m-plus'));
+
+  function replier() {
+    plus.forEach(function (b) {
+      b.setAttribute('aria-expanded', 'false');
+      var sous = document.getElementById(b.getAttribute('aria-controls'));
+      if (sous) sous.hidden = true;
+    });
+  }
+
   function closeNav() {
     nav.classList.remove('is-open');
     toggle.classList.remove('is-open');
     toggle.setAttribute('aria-expanded', 'false');
+    replier();
   }
+
+  /* Accordéon : le libellé reste un lien vers la mère, le chevron déplie. */
+  plus.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var sous = document.getElementById(b.getAttribute('aria-controls'));
+      if (!sous) return;
+      var ouvert = b.getAttribute('aria-expanded') === 'true';
+      replier();
+      if (!ouvert) {
+        b.setAttribute('aria-expanded', 'true');
+        sous.hidden = false;
+        b.parentNode.scrollIntoView({ block: 'nearest' });
+      }
+    });
+  });
 
   toggle.addEventListener('click', function () {
     var open = nav.classList.toggle('is-open');
@@ -17,7 +43,7 @@
   });
 
   nav.addEventListener('click', function (e) {
-    if (e.target.tagName === 'A') closeNav();
+    if (e.target.closest('a')) closeNav();
   });
 
   document.addEventListener('keydown', function (e) {

@@ -68,6 +68,34 @@ _TRACES = {
         '<rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/>'
         '<path d="M17.25 13.5v7.5M13.5 17.25h7.5"/>',
 
+    # ---- Peurs et frustrations ------------------------------------------
+    # Une icône par contrainte de comptoir, pour que la peur se lise avant le
+    # texte — la section était un paragraphe centré, elle devient trois cartes.
+    "horloge":
+        '<circle cx="12" cy="12" r="9"/><path d="M12 7v5.2l3.2 2"/>',
+    "alerte":
+        '<path d="M10.3 3.9L2.6 17.2A2 2 0 0 0 4.3 20.2h15.4a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>'
+        '<path d="M12 9.5v4M12 16.8v.01"/>',
+    "calcul":
+        '<rect x="4" y="2.5" width="16" height="19" rx="2"/>'
+        '<path d="M8 6.5h8"/><path d="M8.5 11h.01M12 11h.01M15.5 11h.01"/>'
+        '<path d="M8.5 14.5h.01M12 14.5h.01M15.5 14.5h.01"/><path d="M8.5 18h3.5M15.5 18h.01"/>',
+    "controle":
+        '<path d="M13.5 2.5H7a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/>'
+        '<path d="M13.5 2.5V8H19"/><circle cx="11.5" cy="14" r="2.6"/><path d="M13.4 15.9L16 18.5"/>',
+    "rupture":
+        '<path d="M3.5 7.5L12 3l8.5 4.5v9L12 21l-8.5-4.5v-9z"/>'
+        '<path d="M3.5 7.5L12 12l8.5-4.5M12 12v9"/><path d="M12 6.5v.01"/>',
+    "oeil":
+        '<path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/>'
+        '<circle cx="12" cy="12" r="2.8"/>',
+    "cadenas":
+        '<rect x="4" y="10" width="16" height="11" rx="2"/>'
+        '<path d="M8 10V7a4 4 0 0 1 8 0v3"/><path d="M12 14.5v2.5"/>',
+    "calendrier":
+        '<rect x="3" y="5" width="18" height="16" rx="2"/>'
+        '<path d="M3 9.5h18M8 3v4M16 3v4"/><path d="M7.5 13.5h3v3h-3z"/>',
+
     # ---- Métiers -------------------------------------------------------
     "m-boulangerie":
         '<path d="M4.5 15.5c-1.4-1.4-1.4-3.6 0-5l6-6c1.4-1.4 3.6-1.4 5 0l3.5 3.5c1.4 1.4 1.4 3.6 0 5l-6 6c-1.4 1.4-3.6 1.4-5 0z"/>'
@@ -96,6 +124,12 @@ _TRACES = {
     "m-epicerie":
         '<path d="M3 7h18l-1.8 11.2a2 2 0 0 1-2 1.8H6.8a2 2 0 0 1-2-1.8z"/>'
         '<path d="M8.5 7V5.5a3.5 3.5 0 0 1 7 0V7"/><path d="M9.5 11.5v4M14.5 11.5v4"/>',
+    # Métier sans page dédiée — devanture générique, pour que la colonne
+    # du menu reste alignée quand l'icône métier n'existe pas encore.
+    "m-generique":
+        '<path d="M4.5 10.5V20h15v-9.5"/>'
+        '<path d="M3 10.5l1.8-5.5h14.4l1.8 5.5"/>'
+        '<path d="M3 10.5h18"/><path d="M9.5 20v-5.5h5V20"/>',
     # Matériel — douchette
     "douchette":
         '<path d="M4 5v14M7 5v14M10.5 5v14M14 5v14M17.5 5v10"/>'
