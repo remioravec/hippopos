@@ -1119,3 +1119,77 @@ section.bande { background: var(--surface); }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
 }
+
+/* ==========================================================================
+   Méga-menu — exhaustif par axe. La liste ne bouge pas avec les positions :
+   toute la différenciation passe par le corps des pages.
+   ========================================================================== */
+.main-nav { position: static; }
+.site-header .container { position: relative; }
+.main-nav .mega-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 0;
+  font: inherit;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 6px 0;
+}
+.main-nav .mega-btn .chev { transition: transform .2s ease; }
+.main-nav .mega-btn[aria-expanded='true'] .chev { transform: rotate(180deg); }
+.mega-btn .chev { transition: transform 0.2s ease; }
+.mega-btn[aria-expanded='true'] .chev { transform: rotate(180deg); }
+.mega-btn:focus-visible { outline: 2px solid var(--cta-dark); outline-offset: 4px; border-radius: 4px; }
+
+.mega {
+  position: absolute;
+  top: calc(100% + 18px);
+  left: 24px;
+  right: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 28px 32px;
+  display: none;
+  z-index: 60;
+}
+.mega[data-ouvert='true'] { display: grid; grid-template-columns: 1.15fr 1fr; gap: 40px; }
+.mega h4 {
+  margin: 0 0 14px;
+  font-size: 0.72rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.mega-mere {
+  display: block;
+  font-weight: 600;
+  color: var(--cta-dark);
+  text-decoration: none;
+  padding: 8px 0 12px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 10px;
+}
+.mega-mere:hover { text-decoration: underline; }
+.mega-liste { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 20px; }
+.mega-liste a,
+.mega-liste span {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 0;
+  font-size: 0.9rem;
+  color: var(--text);
+  text-decoration: none;
+}
+.mega-liste a:hover { color: var(--cta-dark); }
+.mega-liste span { color: var(--text-muted); }
+.mega-liste .ico { width: 18px; height: 18px; color: var(--text-muted); }
+.mega-liste a:hover .ico { color: var(--cta-dark); }
+.mega-note { grid-column: 1 / -1; margin: 18px 0 0; padding-top: 16px; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--text-muted); }
+
+@media (max-width: 980px) { .mega { display: none !important; } .main-nav .chev { display: none; } }

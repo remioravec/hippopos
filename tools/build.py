@@ -75,12 +75,62 @@ def head(titre, desc, url, blocs_ld, profondeur):
 </head>"""
 
 
+
+def mega_menu(profondeur):
+    """Méga-menu exhaustif par axe — les deux colonnes du modèle.
+
+    La colonne Métiers porte la mère puis les 18 métiers ; celle des
+    fonctionnalités les 6 briques comprises et les 4 add-ons. Les métiers sans
+    page publiée sont listés sans lien : le menu dit l'offre, pas l'état de
+    production.
+    """
+    base = ("../" * profondeur).rstrip("/") or "."
+    metiers = "\n".join(
+        (f'            <a href="{base}/logiciel-de-caisse/{sl}/">{ico("m-" + sl)}{lab}</a>'
+         if pub else f'            <span>{lab}</span>')
+        for sl, lab, pub in METIERS_COUVERTS
+    )
+    fonctions = "\n".join(
+        f'            <a href="{base}/fonctionnalites/#{i}">{ico(i)}{t}</a>'
+        for i, t, _ in BRIQUES + ADDONS
+    )
+    return f"""
+      <div class="mega" id="mega" data-ouvert="false">
+          <div>
+            <h4>Métiers</h4>
+            <a class="mega-mere" href="{base}/logiciel-de-caisse/">Logiciel de caisse pour commerce de détail</a>
+            <div class="mega-liste">
+{metiers}
+            </div>
+          </div>
+          <div>
+            <h4>Fonctionnalités</h4>
+            <a class="mega-mere" href="{base}/fonctionnalites/">Les fonctionnalités d'un logiciel de caisse</a>
+            <div class="mega-liste">
+{fonctions}
+            </div>
+          </div>
+          <p class="mega-note">
+            Conformité et tarifs : <a href="{base}/nf525/">logiciel de caisse certifié</a> ·
+            <a href="{base}/tarifs/">prix d'un logiciel de caisse</a>
+          </p>
+      </div>"""
+
+
 def entete(profondeur, actif=""):
     r = "../" * profondeur
+    AXES = {"/logiciel-de-caisse/", "/fonctionnalites/"}
     liens = "\n".join(
-        f'        <a href="{r.rstrip("/") or "."}{u}"'
-        + (' aria-current="page"' if u == actif else "")
-        + f">{lab}</a>"
+        (f'        <a href="{r.rstrip("/") or "."}{u}" class="mega-btn"'
+         f' data-mega aria-expanded="false" aria-controls="mega"'
+         + (' aria-current="page"' if u == actif else "")
+         + f'>{lab}<svg class="chev" width="13" height="13" viewBox="0 0 24 24" fill="none"'
+           ' stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"'
+           ' aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></a>'
+         if u in AXES else
+         f'        <a href="{r.rstrip("/") or "."}{u}"'
+         + (' aria-current="page"' if u == actif else "")
+         + f">{lab}</a>")
         for u, lab in SILOS
     )
     liens_mobile = "\n".join(
@@ -93,6 +143,7 @@ def entete(profondeur, actif=""):
         <img src="{r}assets/hippopos-logo.png" alt="Hippopos" style="height: 40px;" />
       </a>
       <nav class="main-nav">
+{mega_menu(profondeur)}
 {liens}
       </nav>
       <div class="header-actions">
@@ -311,6 +362,7 @@ def page_metier(slug):
 
     soeurs = "\n".join(
         f"""          <a class="link-card" href="../{s}/">
+            {ico("m-" + s)}
             <strong>Logiciel de caisse {METIERS[s]["nom"]}</strong>
             <span>{METIERS[s]["signature_titre"]}</span>
           </a>"""
@@ -555,6 +607,7 @@ def hub_metiers():
             m = METIERS[slug]
             cartes.append(
                 f"""          <a class="link-card" href="{slug}/">
+            {ico("m-" + slug)}
             <strong>Logiciel de caisse {m["nom"]}</strong>
             <span>{m["signature_titre"]}</span>
           </a>"""
