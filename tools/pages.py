@@ -9,7 +9,25 @@ verbatim client, capture produit — est marqué A_FOURNIR et ressort surligné 
 jaune sur la page, jamais comblé par une valeur plausible.
 """
 
-A_FOURNIR = "__A_FOURNIR__"
+# Cibles de croisement vers l'axe secondaire. Tant que la page fille n'existe pas
+# (roadmap septembre), le lien pointe sur la section du hub — l'ancre, elle, porte
+# déjà l'exact match de la requête cible de la future page.
+FONCTIONS = {
+    "vente-au-poids":     ("logiciel de caisse avec vente au poids", "avec-vente-au-poids", "caisse-tactile"),
+    "variantes-produit":  ("logiciel de caisse avec variantes produit", "avec-variantes-produit", "caisse-tactile"),
+    "gestion-de-stock":   ("logiciel de caisse avec gestion de stock", "avec-gestion-de-stock", "stock"),
+    "inventaire-guide":   ("logiciel de caisse avec inventaire guidé", "avec-inventaire-guide", "stock"),
+    "multi-magasins":     ("logiciel de caisse multi-magasins", "multi-magasins", "multi-magasins"),
+    "fidelite":           ("logiciel de caisse avec programme de fidélité", "avec-programme-de-fidelite", "fidelite"),
+    "etiquettes":         ("logiciel de caisse avec étiquettes et codes-barres", "avec-etiquettes-et-codes-barres", "etiquettes"),
+    "cloture-de-caisse":  ("logiciel de caisse avec clôture de caisse", "avec-cloture-de-caisse", "clotures"),
+    "comptes-vendeurs":   ("logiciel de caisse avec comptes vendeurs et permissions", "avec-comptes-vendeurs-et-permissions", "equipe"),
+    "cheques-cadeaux":    ("logiciel de caisse avec chèques cadeaux", "avec-cheques-cadeaux", "cheques-cadeaux"),
+}
+
+# Pages filles de l'axe secondaire réellement publiées. Vide aujourd'hui : les
+# croisements pointent donc sur la section du hub.
+FONCTIONS_PUBLIEES = set()
 
 # Les 18 métiers que l'offre couvre (spec 15/08/2026, offre=true).
 # 9 autres sont écartés par la règle d'offre : restaurant, bar, café, food truck,
@@ -91,7 +109,8 @@ METIERS = {
             ("Croissants", "4 × 1,30 €", "5,20 €"),
             ("Chocolats en vrac", "0,340 kg × 26,00 €/kg", "8,84 €"),
         ], "16,44 €"),
-        soeurs=["patisserie", "chocolaterie", "traiteur"],
+        croisements=['vente-au-poids', 'etiquettes', 'multi-magasins'],
+        soeurs=['patisserie', 'chocolaterie'],
     ),
     "patisserie": dict(
         nom="pâtisserie", famille="Métiers de bouche", vol=10, releve="08/08/2026",
@@ -124,7 +143,8 @@ METIERS = {
             ("Éclairs chocolat", "2 × 3,50 €", "7,00 €"),
             ("Tarte citron — à la part", "3 × 2,70 €", "8,10 €"),
         ], "39,10 €"),
-        soeurs=["boulangerie", "chocolaterie", "traiteur"],
+        croisements=['variantes-produit', 'vente-au-poids', 'etiquettes'],
+        soeurs=['boulangerie', 'chocolaterie'],
     ),
     "chocolaterie": dict(
         nom="chocolaterie", famille="Métiers de bouche", vol=10, releve="08/08/2026",
@@ -157,7 +177,8 @@ METIERS = {
             ("Coffret de Noël 100 g", "1 × 18,00 €", "18,00 €"),
             ("Orangettes", "0,120 kg × 45,00 €/kg", "5,40 €"),
         ], "34,65 €"),
-        soeurs=["patisserie", "boulangerie", "epicerie"],
+        croisements=['vente-au-poids', 'multi-magasins', 'cheques-cadeaux'],
+        soeurs=['patisserie', 'boulangerie'],
     ),
     "boucherie": dict(
         nom="boucherie", famille="Métiers de bouche", vol=10, releve="08/08/2026",
@@ -189,7 +210,8 @@ METIERS = {
             ("Saucisses de Toulouse", "6 × 1,20 €", "7,20 €"),
             ("Bœuf bourguignon — à la part", "2 × 5,50 €", "11,00 €"),
         ], "43,00 €"),
-        soeurs=["charcuterie", "poissonnerie", "traiteur"],
+        croisements=['vente-au-poids', 'comptes-vendeurs', 'cloture-de-caisse'],
+        soeurs=['charcuterie', 'poissonnerie'],
     ),
     "charcuterie": dict(
         nom="charcuterie", famille="Métiers de bouche", vol=10, releve="08/08/2026",
@@ -221,7 +243,8 @@ METIERS = {
             ("Terrine de campagne", "0,320 kg × 19,00 €/kg", "6,08 €"),
             ("Quiche lorraine — à la part", "2 × 2,80 €", "5,60 €"),
         ], "17,08 €"),
-        soeurs=["boucherie", "traiteur", "epicerie"],
+        croisements=['vente-au-poids', 'variantes-produit', 'etiquettes'],
+        soeurs=['boucherie', 'traiteur'],
     ),
     "poissonnerie": dict(
         nom="poissonnerie", famille="Métiers de bouche", vol=10, releve="08/08/2026",
@@ -252,7 +275,8 @@ METIERS = {
             ("Moules de bouchot", "1,000 kg × 4,90 €/kg", "4,90 €"),
             ("Crevettes cuites", "0,300 kg × 29,00 €/kg", "8,70 €"),
         ], "27,04 €"),
-        soeurs=["boucherie", "charcuterie", "traiteur"],
+        croisements=['vente-au-poids', 'cloture-de-caisse', 'etiquettes'],
+        soeurs=['boucherie', 'charcuterie'],
     ),
     "traiteur": dict(
         nom="traiteur", famille="Métiers de bouche", vol=10, releve="08/08/2026",
@@ -285,7 +309,8 @@ METIERS = {
             ("Lasagnes — à la part", "2 × 5,50 €", "11,00 €"),
             ("Terrine de légumes", "0,180 kg × 24,00 €/kg", "4,32 €"),
         ], "21,32 €"),
-        soeurs=["charcuterie", "boucherie", "patisserie"],
+        croisements=['vente-au-poids', 'variantes-produit', 'comptes-vendeurs'],
+        soeurs=['charcuterie', 'boucherie'],
     ),
     "epicerie": dict(
         nom="épicerie", famille="Commerce de détail", vol=70, releve="07/08/2026",
@@ -317,7 +342,8 @@ METIERS = {
             ("Amandes en vrac", "0,250 kg × 25,00 €/kg", "6,25 €"),
             ("Huile d'olive 75 cl", "1 × 9,80 €", "9,80 €"),
         ], "19,95 €"),
-        soeurs=["chocolaterie", "traiteur", "boulangerie"],
+        croisements=['gestion-de-stock', 'inventaire-guide', 'multi-magasins'],
+        soeurs=['chocolaterie', 'traiteur'],
     ),
 }
 

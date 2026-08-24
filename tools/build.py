@@ -19,7 +19,7 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 from pages import (  # noqa: E402
-    METIERS, METIERS_COUVERTS, FAQ_SILO_METIERS, DECLINAISONS,
+    METIERS, METIERS_COUVERTS, FAQ_SILO_METIERS, FONCTIONS, FONCTIONS_PUBLIEES,
 )
 
 RACINE = pathlib.Path(__file__).resolve().parent.parent
@@ -264,6 +264,21 @@ def ecrire(chemin, contenu):
 # --------------------------------------------------------------------------
 # Gabarit — unité d'achat (page métier)
 # --------------------------------------------------------------------------
+def faq_metier(nom):
+    """Deux questions seulement, qui portent les liens vers les guides. Placées
+    après la bande de conversion : elles ne détournent personne."""
+    return [
+        (f"Combien coûte un logiciel de caisse pour une {nom} ?",
+         "Entre 29 et 69 € HT par mois selon le nombre de vendeurs et de magasins, "
+         "sans matériel à acheter et sans engagement. Le détail poste par poste est "
+         'sur la page <a href="../../tarifs/">prix d\'un logiciel de caisse</a>.'),
+        (f"Une caisse de {nom} doit-elle être conforme NF525 ?",
+         "Oui, dès lors que le commerce est assujetti à la TVA et encaisse des "
+         "particuliers. Les quatre exigences et la façon de les vérifier sont "
+         'détaillées sur la page <a href="../../nf525/">logiciel de caisse certifié</a>.'),
+    ]
+
+
 def page_metier(slug):
     m = METIERS[slug]
     url = f"/logiciel-de-caisse/{slug}/"
@@ -293,21 +308,25 @@ def page_metier(slug):
         "Dire ce que le produit ne fait pas évite les essais qui n'aboutissent pas.",
     )
 
-    declins = "\n".join(
-        f"""          <div class="link-card is-soon">
-            <strong>{t}</strong>
-            <span>{d}</span>
-            <span style="margin-top:8px;font-size:0.82rem;">Page prévue — roadmap {sl}</span>
-          </div>"""
-        for t, d, sl in DECLINAISONS
-    )
-
     soeurs = "\n".join(
         f"""          <a class="link-card" href="../{s}/">
             <strong>Logiciel de caisse {METIERS[s]["nom"]}</strong>
             <span>{METIERS[s]["signature_titre"]}</span>
           </a>"""
         for s in m["soeurs"]
+    )
+
+    def cible_fonction(cle):
+        ancre, slug_page, section = FONCTIONS[cle]
+        url = (f"../../fonctionnalites/{slug_page}/" if cle in FONCTIONS_PUBLIEES
+               else f"../../fonctionnalites/#{section}")
+        return ancre, url
+
+    croisements = "\n".join(
+        f"""          <a class="link-card" href="{u}">
+            <strong>{a}</strong>
+          </a>"""
+        for a, u in (cible_fonction(c) for c in m["croisements"])
     )
 
     ticket_entete, lignes_ticket, ticket_total = m["ticket"]
@@ -331,7 +350,6 @@ def page_metier(slug):
         <p class="lede">{m["lede"]}</p>
         <div class="hero-cta-row">
           <a href="{APP}/inscription" class="btn btn-cta">Essayer 14 jours</a>
-          <a href="../../tarifs/" class="btn btn-ghost">Voir les tarifs</a>
         </div>
       </div>
     </section>
@@ -389,8 +407,22 @@ def page_metier(slug):
     <section>
       <div class="container">
         <div class="section-head">
+          <span class="eyebrow">Les fonctions qui comptent ici</span>
+          <h2>Ce qu'une caisse de {nom} doit savoir faire</h2>
+        </div>
+        <div class="link-grid">
+{croisements}
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
           <span class="eyebrow">Métiers proches</span>
           <h2>Les autres métiers de comptoir</h2>
+          <p>Vous cherchez un autre commerce ? Voir les 18 métiers que couvre le
+             <a href="../">logiciel de caisse pour commerce de détail</a>.</p>
         </div>
         <div class="link-grid">
 {soeurs}
@@ -399,6 +431,7 @@ def page_metier(slug):
     </section>
 {bande_cta(f"Voir Hippopos en {nom}",
            "14 jours d'essai, sans carte bancaire, votre catalogue importé en une fois.")}
+{bloc_faq(faq_metier(nom), f"Les questions qu'on nous pose en {nom}")}
   </main>"""
 
     html = (head(m["title"], m["desc"], url, ld, 2)
@@ -435,7 +468,6 @@ def page_hub(url, titre, desc, h1, lede, eyebrow, sections, faq, faq_titre,
         <p class="lede">{lede}</p>
         <div class="hero-cta-row">
           <a href="{APP}/inscription" class="btn btn-cta">Essayer 14 jours</a>
-          <a href="{"../" * profondeur}tarifs/" class="btn btn-ghost">Voir les tarifs</a>
         </div>
       </div>
     </section>
@@ -552,20 +584,20 @@ def hub_metiers():
 
 
 BRIQUES = [
-    ("Caisse tactile rapide", "Vente à la pièce ou au poids, variantes, codes-barres, remises et paiements mixtes."),
-    ("Conformité NF525", "Ventes et clôtures chaînées et horodatées, journaux consultables, archivage inaltérable."),
-    ("Stock et inventaires", "Suivi par produit ou par variante, inventaires guidés, alertes de rupture."),
-    ("Clôtures et fond de caisse", "Clôtures jour, mois et année, comptage du fond, entrées et sorties d'espèces."),
-    ("Équipe et permissions", "Un vendeur par membre de l'équipe, code PIN et droits d'accès personnalisés."),
-    ("Tickets et reçus", "Ticket imprimable ou envoyé par email, avec logo et coordonnées du magasin."),
+    ("caisse-tactile", "Caisse tactile rapide", "Vente à la pièce ou au poids, variantes, codes-barres, remises et paiements mixtes."),
+    ("conformite", "Conformité NF525", "Ventes et clôtures chaînées et horodatées, journaux consultables, archivage inaltérable."),
+    ("stock", "Stock et inventaires", "Suivi par produit ou par variante, inventaires guidés, alertes de rupture."),
+    ("clotures", "Clôtures et fond de caisse", "Clôtures jour, mois et année, comptage du fond, entrées et sorties d'espèces."),
+    ("equipe", "Équipe et permissions", "Un vendeur par membre de l'équipe, code PIN et droits d'accès personnalisés."),
+    ("tickets", "Tickets et reçus", "Ticket imprimable ou envoyé par email, avec logo et coordonnées du magasin."),
 ]
 
 # Activables à la demande depuis les paramètres (restructuration du 22/08/2026).
 ADDONS = [
-    ("Multi-magasins", "Catalogue centralisé, stock indépendant par magasin, transferts en deux temps."),
-    ("Fidélité clients", "Points, carte à tampons ou cashback : le programme qui correspond au commerce."),
-    ("Étiquettes et codes-barres", "Génération et impression d'étiquettes produit, scan par douchette ou caméra."),
-    ("Tickets et chèques cadeaux", "Ticket cadeau sans les prix, et chèques cadeaux à code unique dont le solde se suit tout seul."),
+    ("multi-magasins", "Multi-magasins", "Catalogue centralisé, stock indépendant par magasin, transferts en deux temps."),
+    ("fidelite", "Fidélité clients", "Points, carte à tampons ou cashback : le programme qui correspond au commerce."),
+    ("etiquettes", "Étiquettes et codes-barres", "Génération et impression d'étiquettes produit, scan par douchette ou caméra."),
+    ("cheques-cadeaux", "Tickets et chèques cadeaux", "Ticket cadeau sans les prix, et chèques cadeaux à code unique dont le solde se suit tout seul."),
 ]
 
 COMPATIBILITES = [
@@ -576,12 +608,12 @@ COMPATIBILITES = [
 
 
 def hub_fonctionnalites():
-    carte = lambda t, d: f"""          <div class="feature-card">
+    carte = lambda i, t, d: f"""          <div class="feature-card" id="{i}">
             <h3>{t}</h3>
             <p>{d}</p>
           </div>"""
-    briques = "\n".join(carte(t, d) for t, d in BRIQUES)
-    addons = "\n".join(carte(t, d) for t, d in ADDONS)
+    briques = "\n".join(carte(i, t, d) for i, t, d in BRIQUES)
+    addons = "\n".join(carte(i, t, d) for i, t, d in ADDONS)
     compat = "\n".join(
         f"""          <div class="link-card is-info">
             <strong>{t}</strong>
@@ -643,7 +675,9 @@ def hub_fonctionnalites():
          "Hippopos couvre la vente en boutique."),
         ("Y a-t-il un écran cuisine ou un plan de salle ?",
          "Non. Hippopos ne couvre pas la restauration servie en salle. Il n'y a ni écran "
-         "cuisine, ni plan de salle, ni commande à table."),
+         "cuisine, ni plan de salle, ni commande à table. Pour voir ces fonctions appliquées "
+         'à un commerce, voir le <a href="../logiciel-de-caisse/">logiciel de caisse pour '
+         'commerce de détail</a>.'),
     ]
     return page_hub(
         url="/fonctionnalites/",
@@ -744,7 +778,8 @@ def hub_nf525():
         ("Une caisse à touches est-elle concernée ?",
          "Oui, dès lors qu'elle enregistre des règlements de particuliers. La forme du "
          "matériel ne change rien : c'est la fonction d'enregistrement qui déclenche "
-         "l'obligation."),
+         "l'obligation. Les fonctions de conformité sont les mêmes sur les 18 métiers du "
+         '<a href="../logiciel-de-caisse/">logiciel de caisse pour commerce de détail</a>.'),
     ]
     return page_hub(
         url="/nf525/",
@@ -871,7 +906,9 @@ def hub_tarifs():
          "accessibles pour l'export."),
         ("Le tarif change-t-il si j'ouvre un second magasin ?",
          "Oui : le passage à la formule Multi-magasins à 69 € HT par mois inclut le premier "
-         "magasin, puis chaque magasin supplémentaire coûte 39 € HT par mois."),
+         "magasin, puis chaque magasin supplémentaire coûte 39 € HT par mois. "
+         'Le tarif ne change pas d\'un métier à l\'autre : voir le '
+         '<a href="../logiciel-de-caisse/">logiciel de caisse pour commerce de détail</a>.'),
     ]
     return page_hub(
         url="/tarifs/",
