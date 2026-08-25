@@ -720,7 +720,7 @@ def page_metier(slug):
     <section class="page-hero hero-metier-page">
       <div class="container">
         <div class="hero-mots">
-          <span class="eyebrow">{m["famille"]}</span>
+          <span class="tag-metier">{ico("m-" + slug) if ico("m-" + slug) else ico("m-generique")}{m["famille"]}</span>
           <h1>{m["h1"]}</h1>
           <p class="lede">{m["lede"]}</p>
           <div class="hero-cta-row">

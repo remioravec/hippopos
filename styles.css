@@ -1436,3 +1436,20 @@ section.bande { background: var(--surface); }
   .p-ligne.est-alerte .p-val { color: #f0a868; }
   .p-ligne.est-ok .p-val { color: #6ee7a8; }
 }
+
+/* Pastille de métier dans le hero — l'icône dit le rayon avant que le titre
+   soit lu. Reprise du modèle : une étiquette, pas un sur-titre en majuscules. */
+.tag-metier {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 15px 7px 12px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text);
+}
+.tag-metier .ico { width: 18px; height: 18px; color: var(--cta-dark); }
