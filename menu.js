@@ -51,33 +51,40 @@
   });
 })();
 
-/* Méga-menu — ouvert par les entrées d'axe, fermé au clic extérieur et à Échap.
-   Le lien reste un lien : un clic sur le libellé navigue, un clic sur le chevron
-   ouvre le panneau. */
+/* Méga-menu — un panneau par axe. Le lien reste un lien : un clic sur le
+   libellé navigue, un clic sur le chevron ouvre le panneau de CET axe. */
 (function () {
-  var pan = document.getElementById('mega');
   var boutons = [].slice.call(document.querySelectorAll('[data-mega]'));
-  if (!pan || !boutons.length) return;
+  if (!boutons.length) return;
+
+  function panneau(b) { return document.getElementById(b.getAttribute('aria-controls')); }
 
   function fermer() {
-    pan.setAttribute('data-ouvert', 'false');
-    boutons.forEach(function (b) { b.setAttribute('aria-expanded', 'false'); });
+    boutons.forEach(function (b) {
+      b.setAttribute('aria-expanded', 'false');
+      var p = panneau(b);
+      if (p) p.setAttribute('data-ouvert', 'false');
+    });
   }
+
   boutons.forEach(function (b) {
     b.addEventListener('click', function (e) {
       if (!e.target.closest('.chev')) return;   // le libellé navigue normalement
       e.preventDefault();
       e.stopPropagation();
-      var ouvert = pan.getAttribute('data-ouvert') === 'true';
+      var p = panneau(b);
+      if (!p) return;
+      var ouvert = p.getAttribute('data-ouvert') === 'true';
       fermer();
       if (!ouvert) {
-        pan.setAttribute('data-ouvert', 'true');
+        p.setAttribute('data-ouvert', 'true');
         b.setAttribute('aria-expanded', 'true');
       }
     });
   });
+
   document.addEventListener('click', function (e) {
-    if (!pan.contains(e.target)) fermer();
+    if (!e.target.closest('.mega') && !e.target.closest('[data-mega]')) fermer();
   });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') fermer();

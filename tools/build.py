@@ -22,7 +22,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).parent))
 from icones import ico  # noqa: E402
 from pages import (  # noqa: E402
     METIERS, METIERS_COUVERTS, FAQ_SILO_METIERS, FONCTIONS, FONCTIONS_PUBLIEES,
-    PEURS, FONCTIONS_DETAIL, CAS, VARIANTES_EXEMPLE, PEURS_HUB,
+    PEURS, FONCTIONS_DETAIL, CAS, VARIANTES_EXEMPLE, PEURS_HUB, FAMILLES_METIERS,
 )
 
 RACINE = pathlib.Path(__file__).resolve().parent.parent
@@ -84,50 +84,81 @@ CHEVRON = ('<svg class="chev" width="13" height="13" viewBox="0 0 24 24" fill="n
            '<polyline points="6 9 12 15 18 9"></polyline></svg>')
 
 
-def _axes(base):
-    """Le contenu des deux axes, partagé par le méga-menu et le menu mobile.
+# Familles de fonctionnalités, dans l'ordre du parcours : on vend, on pilote,
+# puis on ajoute si besoin.
+FAMILLES_FONCTIONS = [
+    ("Vendre et encaisser", ["caisse-tactile", "tickets", "conformite"]),
+    ("Piloter le magasin", ["stock", "clotures", "equipe"]),
+    ("Activables à la demande", ["multi-magasins", "fidelite", "etiquettes", "cheques-cadeaux"]),
+]
 
-    Un seul jeu de données pour les deux surfaces : ce qui s'ouvre au doigt dit
-    exactement ce qui s'ouvre à la souris. Les métiers sans page publiée sont
-    listés sans lien — le menu dit l'offre, pas l'état de production.
+# Les deux axes du méga-menu. Un panneau par axe, jamais les deux ensemble :
+# ouvrir « Métiers » et ouvrir « Fonctionnalités » affichaient le même contenu.
+AXES_MENU = [
+    ("/logiciel-de-caisse/", "mega-metiers", "Métiers",
+     "Voir les 18 métiers couverts",
+     "Vente à la pièce, au poids ou par variantes. Ni restauration servie, ni rendez-vous."),
+    ("/fonctionnalites/", "mega-fonctions", "Fonctionnalités",
+     "Voir toutes les fonctionnalités",
+     "Six briques comprises dès la première formule, quatre modules activables à la demande."),
+]
+
+
+def _groupes(cle, base):
+    """Les entrées d'un axe, groupées par famille.
+
+    Une seule source pour le méga-menu et le menu mobile : ce qui s'ouvre au
+    doigt dit exactement ce qui s'ouvre à la souris. Les métiers sans page
+    publiée sont listés sans lien — le menu dit l'offre, pas l'état de
+    production.
     """
+    if cle == "mega-metiers":
+        libelles = {sl: (lab, pub) for sl, lab, pub in METIERS_COUVERTS}
+        return [
+            (famille, [
+                (f"{base}/logiciel-de-caisse/{sl}/" if libelles[sl][1] else None,
+                 "m-" + sl if ico("m-" + sl) else "m-generique",
+                 libelles[sl][0])
+                for sl in slugs
+            ])
+            for famille, slugs in FAMILLES_METIERS
+        ]
+    titres = {i: t for i, t, _ in BRIQUES + ADDONS}
     return [
-        ("metiers", "Métiers", f"{base}/logiciel-de-caisse/",
-         "Logiciel de caisse pour commerce de détail",
-         [(f"{base}/logiciel-de-caisse/{sl}/" if pub else None,
-           "m-" + sl if ico("m-" + sl) else "m-generique", lab)
-          for sl, lab, pub in METIERS_COUVERTS]),
-        ("fonctionnalites", "Fonctionnalités", f"{base}/fonctionnalites/",
-         "Les fonctionnalités d'un logiciel de caisse",
-         [(f"{base}/fonctionnalites/#{i}", i, t) for i, t, _ in BRIQUES + ADDONS]),
+        (famille, [(f"{base}/fonctionnalites/#{i}", i, titres[i]) for i in ids])
+        for famille, ids in FAMILLES_FONCTIONS
     ]
 
 
 def mega_menu(profondeur):
-    """Méga-menu de bureau — les deux colonnes du modèle, ouvertes par le chevron."""
+    """Un panneau par axe, en colonnes de famille."""
     base = ("../" * profondeur).rstrip("/") or "."
-    colonnes = []
-    for _, titre, url_mere, libelle_mere, items in _axes(base):
-        lignes = "\n".join(
-            f'            <a href="{u}">{ico(i)}{lab}</a>' if u
-            else f'            <span>{ico(i)}{lab}</span>'
-            for u, i, lab in items
-        )
-        colonnes.append(f"""          <div>
-            <h4>{titre}</h4>
-            <a class="mega-mere" href="{url_mere}">{libelle_mere}</a>
-            <div class="mega-liste">
+    panneaux = []
+    for url, cle, _, libelle_cta, note in AXES_MENU:
+        colonnes = []
+        for famille, items in _groupes(cle, base):
+            lignes = "\n".join(
+                f'              <a href="{u}">{ico(i)}<span>{lab}</span></a>' if u
+                else f'              <span class="a-venir">{ico(i)}<span>{lab}</span></span>'
+                for u, i, lab in items
+            )
+            double = " est-double" if len(items) > 5 else ""
+            colonnes.append(f"""            <div class="mega-col">
+              <h4>{famille}</h4>
+              <div class="mega-liste{double}">
 {lignes}
-            </div>
-          </div>""")
-    return f"""
-      <div class="mega" id="mega" data-ouvert="false">
+              </div>
+            </div>""")
+        panneaux.append(f"""      <div class="mega" id="{cle}" data-ouvert="false">
+          <div class="mega-cols">
 {chr(10).join(colonnes)}
-          <p class="mega-note">
-            Conformité et tarifs : <a href="{base}/nf525/">logiciel de caisse certifié</a> ·
-            <a href="{base}/tarifs/">prix d'un logiciel de caisse</a>
-          </p>
-      </div>"""
+          </div>
+          <div class="mega-bas">
+            <p class="mega-note">{note}</p>
+            <a class="btn btn-cta" href="{base}{url}">{libelle_cta}</a>
+          </div>
+      </div>""")
+    return "\n".join(panneaux)
 
 
 def menu_mobile(profondeur):
@@ -138,40 +169,41 @@ def menu_mobile(profondeur):
     inatteignables au doigt : le menu mobile s'arrêtait aux quatre axes.
     """
     base = ("../" * profondeur).rstrip("/") or "."
-    sous = {"/logiciel-de-caisse/": "metiers", "/fonctionnalites/": "fonctionnalites"}
-    contenus = {cle: items for cle, _, _, _, items in _axes(base)}
+    axes = {url: cle for url, cle, _, _, _ in AXES_MENU}
     lignes = []
     for u, lab in SILOS:
-        cle = sous.get(u)
-        if cle:
-            items = contenus[cle]
+        cle = axes.get(u)
+        if not cle:
+            lignes.append(f'      <a href="{base}{u}">{lab}</a>')
+            continue
+        blocs = []
+        for famille, items in _groupes(cle, base):
             liste = "\n".join(
-                f'          <a href="{lu}">{ico(i)}{l}</a>' if lu
-                else f'          <span>{ico(i)}{l}</span>'
+                f'          <a href="{lu}">{ico(i)}<span>{l}</span></a>' if lu
+                else f'          <span class="a-venir">{ico(i)}<span>{l}</span></span>'
                 for lu, i, l in items
             )
-            lignes.append(f"""      <div class="m-groupe">
+            blocs.append(f'          <p class="m-famille">{famille}</p>\n{liste}')
+        lignes.append(f"""      <div class="m-groupe">
         <div class="m-ligne">
           <a href="{base}{u}">{lab}</a>
-          <button type="button" class="m-plus" data-sous="m-{cle}"
+          <button type="button" class="m-plus"
                   aria-expanded="false" aria-controls="m-{cle}"
                   aria-label="Afficher les {lab.lower()}">{CHEVRON}</button>
         </div>
         <div class="m-sous" id="m-{cle}" hidden>
-{liste}
+{chr(10).join(blocs)}
         </div>
       </div>""")
-        else:
-            lignes.append(f'      <a href="{base}{u}">{lab}</a>')
     return "\n".join(lignes)
 
 
 def entete(profondeur, actif=""):
     r = "../" * profondeur
-    AXES = {"/logiciel-de-caisse/", "/fonctionnalites/"}
+    AXES = {url: cle for url, cle, _, _, _ in AXES_MENU}
     liens = "\n".join(
         (f'        <a href="{r.rstrip("/") or "."}{u}" class="mega-btn"'
-         f' data-mega aria-expanded="false" aria-controls="mega"'
+         f' data-mega aria-expanded="false" aria-controls="{AXES[u]}"'
          + (' aria-current="page"' if u == actif else "")
          + f">{lab}{CHEVRON}</a>"
          if u in AXES else

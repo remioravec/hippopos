@@ -54,6 +54,17 @@ METIERS_COUVERTS = [
     ("magasin-de-decoration", "Magasin de décoration", False),
 ]
 
+# Regroupement des 18 métiers pour le méga-menu et le menu mobile. Deux
+# familles : ce qui se vend au comptoir de bouche, et le reste du détail.
+FAMILLES_METIERS = [
+    ("Métiers de bouche", ["boulangerie", "patisserie", "chocolaterie", "boucherie",
+                           "charcuterie", "poissonnerie", "traiteur", "fromagerie",
+                           "primeur", "caviste"]),
+    ("Épicerie et commerce spécialisé", ["epicerie", "fleuriste", "magasin-de-vetements",
+                                         "cbd", "magasin-de-sport", "animalerie",
+                                         "librairie", "magasin-de-decoration"]),
+]
+
 # Activables à la demande depuis les paramètres (restructuration du 22/08/2026) :
 # multi-magasins, fidélité, étiquettes et codes-barres, tickets et chèques cadeaux.
 ADDONS_PRODUIT = [
