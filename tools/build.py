@@ -707,14 +707,20 @@ def page_metier(slug):
         "Dire ce que le produit ne fait pas évite les essais qui n'aboutissent pas.",
     )
 
-    soeurs = "\n".join(
-        f"""          <a class="link-card" href="../{s}/">
-            {ico("m-" + s)}
-            <strong>Logiciel de caisse {METIERS[s]["nom"]}</strong>
-            <span>{METIERS[s]["signature_titre"]}</span>
+    def carte_soeur(sl):
+        v = METIERS[sl]
+        photo = (f'            <img src="../../assets/{v["photo"]}" alt="" loading="lazy"\n'
+                 f'                 width="1400" height="1050" />\n' if v.get("photo") else "")
+        return f"""          <a class="carte-metier" href="../{sl}/">
+            <span class="carte-metier_photo">
+{photo}            </span>
+            <span class="carte-metier_texte">
+              <span class="carte-metier_titre">{ico("m-" + sl)}Logiciel de caisse {v["nom"]}</span>
+              <span class="carte-metier_sous">{v["signature_titre"]}</span>
+            </span>
           </a>"""
-        for s in m["soeurs"]
-    )
+
+    soeurs = "\n".join(carte_soeur(sl) for sl in m["soeurs"])
 
     def cible_fonction(cle):
         ancre, slug_page, section = FONCTIONS[cle]
@@ -758,7 +764,11 @@ def page_metier(slug):
           <div class="hero-cta-row">
             <a href="{APP}/inscription" class="btn btn-cta">Essayer 14 jours</a>
           </div>
-          <p class="hero-note">Sans engagement · Sans carte bancaire · Votre matériel reste en place</p>
+          <ul class="hero-puces">
+            <li>Sans engagement</li>
+            <li>Sans carte bancaire</li>
+            <li>Votre matériel reste en place</li>
+          </ul>
         </div>
 {photo}      </div>
     </section>
@@ -818,7 +828,7 @@ def page_metier(slug):
           <p>Vous cherchez un autre commerce ? Voir les 18 métiers que couvre le
              <a href="../">logiciel de caisse pour commerce de détail</a>.</p>
         </div>
-        <div class="link-grid">
+        <div class="carrousel-metiers" role="group" aria-label="Métiers proches">
 {soeurs}
         </div>
       </div>
@@ -1445,6 +1455,33 @@ def synchroniser_accueil():
     # avait déjà été remplacée par la version imbriquée.
     s = re.sub(r'    <div class="trust-strip">.*?\n    </div>',
                lambda _: bande_reassurance().rstrip(), s, count=1, flags=re.S)
+
+    # Le hero de l'accueil : la maquette de ticket cède la place à la
+    # photographie, comme sur les pages métier. La phrase du badge reste, posée
+    # sur l'image.
+    d = s.index('class="hero-visual"')
+    d = s.rindex("<", 0, d) - 8   # on repart au début de la ligne, indentée de 8
+    # La fermeture est la première balise refermée au même niveau d'indentation :
+    # compter les </div> échouait au deuxième passage, où le bloc n'a plus la
+    # même profondeur.
+    fin = min(x for x in (s.find("\n        </div>", d), s.find("\n        </figure>", d)) if x > 0)
+    fin = s.index(">", fin + 10) + 1
+    s = s[:d] + """        <figure class="hero-visual">
+          <img class="hero-photo" src="assets/accueil-caisse.webp"
+               alt="Une commerçante encaisse un client sur la caisse tactile de sa boutique"
+               width="1400" height="1050" />
+          <figcaption class="hero-badge">Ticket chaîné et horodaté automatiquement — prêt pour un contrôle fiscal</figcaption>
+        </figure>""" + s[fin:]
+
+    # Les garanties de l'accueil, en bulles comme sur les pages métier.
+    d = s.find('          <p class="hero-note">')
+    if d > 0:
+        fin = s.index("</p>", d) + 4
+        s = s[:d] + """          <ul class="hero-puces">
+            <li>Sans engagement</li>
+            <li>Sans carte bancaire</li>
+            <li>Installation en quelques minutes</li>
+          </ul>""" + s[fin:]
 
     if s == f.read_text(encoding="utf-8"):
         return "index.html (déjà à jour)"

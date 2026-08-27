@@ -67,26 +67,45 @@
     });
   }
 
+  function ouvrir(b) {
+    var p = panneau(b);
+    if (!p) return;
+    fermer();
+    p.setAttribute('data-ouvert', 'true');
+    b.setAttribute('aria-expanded', 'true');
+  }
+
+  /* Ouverture au survol de toute l'entrée, chevron compris. Le lien reste un
+     lien : un clic sur le libellé navigue vers la page mère. Un délai à la
+     sortie évite que le panneau se ferme en traversant l'espace qui l'en
+     sépare. */
+  var minuteur = null;
+  function annuler() { if (minuteur) { clearTimeout(minuteur); minuteur = null; } }
+  function fermerPlusTard() { annuler(); minuteur = setTimeout(fermer, 220); }
+
   boutons.forEach(function (b) {
+    b.addEventListener('mouseenter', function () { annuler(); ouvrir(b); });
+    b.addEventListener('mouseleave', fermerPlusTard);
+    b.addEventListener('focus', function () { annuler(); ouvrir(b); });
+    // Au doigt et au clavier, le chevron reste l'interrupteur.
     b.addEventListener('click', function (e) {
-      if (!e.target.closest('.chev')) return;   // le libellé navigue normalement
+      if (!e.target.closest('.chev')) return;
       e.preventDefault();
       e.stopPropagation();
       var p = panneau(b);
-      if (!p) return;
-      var ouvert = p.getAttribute('data-ouvert') === 'true';
-      fermer();
-      if (!ouvert) {
-        p.setAttribute('data-ouvert', 'true');
-        b.setAttribute('aria-expanded', 'true');
-      }
+      if (p && p.getAttribute('data-ouvert') === 'true') fermer(); else ouvrir(b);
     });
+    var p = panneau(b);
+    if (p) {
+      p.addEventListener('mouseenter', annuler);
+      p.addEventListener('mouseleave', fermerPlusTard);
+    }
   });
 
   document.addEventListener('click', function (e) {
     if (!e.target.closest('.mega') && !e.target.closest('[data-mega]')) fermer();
   });
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') fermer();
+    if (e.key === 'Escape') { annuler(); fermer(); }
   });
 })();

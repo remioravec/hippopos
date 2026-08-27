@@ -1,41 +1,41 @@
 # Crédits des photographies
 
-Photographies des pages métier, trouvées via [Openverse](https://openverse.org),
-filtrées sur **CC0 et domaine public** — aucune obligation d'attribution.
-Elles sont créditées ici par principe, et pour pouvoir remonter à la source.
+Neuf photographies, toutes issues de **[Pexels](https://www.pexels.com)** et
+couvertes par la [licence Pexels](https://www.pexels.com/fr-fr/licence/) :
+usage commercial autorisé, sans redevance et sans obligation d'attribution.
+Les auteurs sont crédités ici par correction, pas par obligation.
 
-Recadrées en 4:3, converties en WebP, toutes sous 210 Ko.
+Recadrées en 4:3, converties en WebP, toutes sous 220 Ko.
 
-| Page | Fichier | Titre d'origine | Licence | Source |
-|---|---|---|---|---|
-| boulangerie | `assets/metiers/boulangerie.webp` | Free baker using tongs pick | CC0 | [source](https://www.rawpixel.com/image/5919156/image-public-domain-person-food) |
-| patisserie | `assets/metiers/patisserie.webp` | Pastry chef using icing bag | CC0 | [source](https://www.rawpixel.com/image/5927626/photo-image-public-domain-birthday-person) |
-| chocolaterie | `assets/metiers/chocolaterie.webp` | — | CC0 | [source](https://www.rawpixel.com/image/5945408/free-public-domain-cc0-photo) |
-| boucherie | `assets/metiers/boucherie.webp` | Butcher shop | CC0 | [source](https://www.rawpixel.com/image/5975314/butcher-shop) |
-| charcuterie | `assets/metiers/charcuterie.webp` | Free cured ham image | CC0 | [source](https://www.rawpixel.com/image/5914355/image-public-domain-food-free) |
-| poissonnerie | `assets/metiers/poissonnerie.webp` | — | CC0 | [source](https://www.rawpixel.com/image/5964248/free-public-domain-cc0-photo) |
-| traiteur | `assets/metiers/traiteur.webp` | Free close chef hands preparing | CC0 | [source](https://www.rawpixel.com/image/5917998/image-public-domain-person-kitchen) |
-| epicerie | `assets/metiers/epicerie.webp` | Vegetables in a supermarket | CC0 | [source](https://www.rawpixel.com/image/6082112/vegetables-supermarket) |
+| Page | Fichier | Sujet | Auteur |
+|---|---|---|---|
+| accueil | `assets/accueil-caisse.webp` | Encaissement sur caisse tactile au comptoir | Unzer Berlin |
+| boulangerie | `assets/metiers/boulangerie.webp` | Boulanger enfournant au four à bois | Yasin Onuş |
+| patisserie | `assets/metiers/patisserie.webp` | Pâtissière décorant un gâteau à la poche | Gustavo Fring |
+| chocolaterie | `assets/metiers/chocolaterie.webp` | Chocolatier pesant et garnissant des tablettes | Lina Kivaka |
+| boucherie | `assets/metiers/boucherie.webp` | Deux bouchers préparant des morceaux | Freek Wolsink |
+| charcuterie | `assets/metiers/charcuterie.webp` | Comptoir de charcuterie et ses vendeurs | Kottkompaniet (Pexels) |
+| poissonnerie | `assets/metiers/poissonnerie.webp` | Poissonniers derrière l'étal, marché de Catane | pierre matile |
+| traiteur | `assets/metiers/traiteur.webp` | Traiteur découpant le jambon devant un buffet | Fidel Hajj |
+| epicerie | `assets/metiers/epicerie.webp` | Épicier réapprovisionnant son rayon | Rossella Fasoli |
 
-## Le geste du métier, jamais un visage
+## Ce qui a guidé le choix
 
-Quatre pages montrent quelqu'un au travail : boulangerie, pâtisserie et traiteur
-par les mains, boucherie par le personnel au fond du comptoir. Aucune ne montre
-un visage reconnaissable, et c'est délibéré.
+Un professionnel **en train de travailler**, et le métier de la page reconnaissable
+sans lire la légende : le boulanger à sa pelle, la pâtissière à sa poche, le
+traiteur à son couteau. Ni photo posée face caméra, ni plan produit seul.
 
-**CC0 couvre le droit d'auteur, pas le droit à l'image.** Une photographie du
-domaine public peut être réutilisée librement par son auteur ; la personne
-photographiée, elle, n'a rien cédé. Publier son visage sur un site commercial
-suppose une autorisation écrite — une *model release* — qu'aucune banque libre
-ne fournit. Le geste, les mains, la silhouette de dos ne posent pas ce problème.
+Écartées : les scènes de restauration servie (Hippopos ne couvre ni l'écran
+cuisine ni le plan de salle, montrer un restaurant tromperait le visiteur), et
+les images où une personne fixe l'objectif en souriant, qui ressemblent à un
+témoignage client alors qu'il n'y en a pas.
 
-Pour des visages, deux voies : une licence payante avec model release
-(Adobe Stock, iStock), ou — bien meilleur pour la crédibilité — des
-photographies de commerçants réellement clients d'Hippopos.
+Aucune enseigne commerciale existante n'est mise en avant, et aucune photo ne
+sert à suggérer qu'un commerce serait client d'Hippopos.
 
-Chocolaterie, charcuterie, poissonnerie et épicerie restent sur un plan produit :
-le fonds libre ne contient aucune image honnête de ces métiers en train de
-s'exercer. Deux recherches, environ deux cents candidats examinés.
+## Historique
 
-Aucune photographie ne montre de personne identifiable, de marque, ni d'enseigne
-commerciale existante.
+Une première série CC0 (Openverse) montrait le geste sans le visage, faute de
+mieux : le fonds libre ne contient pas de photographie exploitable de ces huit
+métiers en train de s'exercer. La licence Pexels lève la contrainte — elle
+couvre l'usage commercial, y compris avec des personnes identifiables.
