@@ -1,85 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Les pages légales (mentions-legales, cgu, confidentialite) portent une balise
-     noindex : elles ne figurent pas au sitemap. Un sitemap ne déclare que des
-     pages destinées à l'index.
-     Fichier écrit à la main — voir le ticket « Automatiser le sitemap » (septembre). -->
+<!-- Écrit par tools/build.py — ne pas modifier à la main.
+     Les pages légales portent un noindex et n'y figurent pas. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://hippopos.fr/</loc>
-    <lastmod>2026-08-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
+    <lastmod>2026-08-27</lastmod>
   </url>
   <url>
     <loc>https://hippopos.fr/logiciel-de-caisse/</loc>
-    <lastmod>2026-08-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-08-27</lastmod>
   </url>
   <url>
     <loc>https://hippopos.fr/fonctionnalites/</loc>
-    <lastmod>2026-08-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-08-27</lastmod>
   </url>
   <url>
     <loc>https://hippopos.fr/nf525/</loc>
-    <lastmod>2026-08-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-08-27</lastmod>
   </url>
   <url>
     <loc>https://hippopos.fr/tarifs/</loc>
-    <lastmod>2026-08-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-08-27</lastmod>
   </url>
   <url>
     <loc>https://hippopos.fr/logiciel-de-caisse/boulangerie/</loc>
-    <lastmod>2026-08-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-08-27</lastmod>
   </url>
   <url>
     <loc>https://hippopos.fr/logiciel-de-caisse/patisserie/</loc>
-    <lastmod>2026-08-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-08-27</lastmod>
   </url>
   <url>
     <loc>https://hippopos.fr/logiciel-de-caisse/chocolaterie/</loc>
-    <lastmod>2026-08-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-08-27</lastmod>
   </url>
   <url>
     <loc>https://hippopos.fr/logiciel-de-caisse/boucherie/</loc>
-    <lastmod>2026-08-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-08-27</lastmod>
   </url>
   <url>
     <loc>https://hippopos.fr/logiciel-de-caisse/charcuterie/</loc>
-    <lastmod>2026-08-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-08-27</lastmod>
   </url>
   <url>
     <loc>https://hippopos.fr/logiciel-de-caisse/poissonnerie/</loc>
-    <lastmod>2026-08-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-08-27</lastmod>
   </url>
   <url>
     <loc>https://hippopos.fr/logiciel-de-caisse/traiteur/</loc>
-    <lastmod>2026-08-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-08-27</lastmod>
   </url>
   <url>
     <loc>https://hippopos.fr/logiciel-de-caisse/epicerie/</loc>
-    <lastmod>2026-08-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-08-27</lastmod>
   </url>
 </urlset>

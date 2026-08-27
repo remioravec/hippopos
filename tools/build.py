@@ -13,6 +13,8 @@ Gabarits, dans l'ordre des maquettes SXO du 15/08/2026 :
                      couvert, déclinaisons, sœurs, CTA
   · page tarifs    — fil d'Ariane, hero, formules, ce que le prix ne dit pas, FAQ
 """
+import subprocess
+import datetime
 import json
 import pathlib
 import re
@@ -40,6 +42,48 @@ SILOS = [
 # --------------------------------------------------------------------------
 # Briques communes
 # --------------------------------------------------------------------------
+
+# Balise Google (GA4) du compte Hippopos. Une seule par page.
+#
+# Elle est posée après `charset` et `viewport`, pas avant : la déclaration
+# d'encodage doit rester dans les 1024 premiers octets, et un script tiers en
+# tête de <head> la repousse pour rien — `gtag.js` est chargé en `async`, sa
+# position dans le <head> ne change ni la mesure ni le rendu.
+GA4 = "G-K5DG6WW2LV"
+
+
+# Jeton de vérification de la Search Console, propriété https://hippopos.fr/.
+# Google ne lit cette balise que sur le site RÉELLEMENT servi : tant que la
+# branche n'est pas fusionnée, la vérification échouera.
+GSC = "YypgoGhOnV-rZrrUJoz4U7HIUL4IJVx0rrCTpKX4TJM"
+
+
+def verification(indentation="  "):
+    return f'{indentation}<meta name="google-site-verification" content="{GSC}" />\n'
+
+def mesure(indentation="  "):
+    """La balise Google, avec un garde-fou d'hôte.
+
+    Le site est aussi servi sur `hippopos-previsu.vercel.app`. Sans ce test,
+    chaque passage sur la prévisu — le nôtre, celui de Timothy — entrerait dans
+    les mêmes rapports que le trafic réel : sessions gonflées, taux d'engagement
+    faussé, et aucun moyen de démêler après coup. `gtag('config')` n'est appelé
+    que sur le domaine du client ; ailleurs le script se charge et ne mesure
+    rien.
+    """
+    i = indentation
+    return (f'{i}<!-- Google tag (gtag.js) -->\n'
+            f'{i}<script async src="https://www.googletagmanager.com/gtag/js?id={GA4}"></script>\n'
+            f'{i}<script>\n'
+            f'{i}  window.dataLayer = window.dataLayer || [];\n'
+            f'{i}  function gtag(){{dataLayer.push(arguments);}}\n'
+            f"{i}  gtag('js', new Date());\n"
+            f"{i}  if (['hippopos.fr', 'www.hippopos.fr'].includes(location.hostname)) {{\n"
+            f"{i}    gtag('config', '{GA4}');\n"
+            f'{i}  }}\n'
+            f'{i}</script>\n')
+
+
 def head(titre, desc, url, blocs_ld, profondeur):
     """En-tête commun. `profondeur` donne le préfixe vers la racine."""
     r = "../" * profondeur
@@ -54,7 +98,7 @@ def head(titre, desc, url, blocs_ld, profondeur):
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{titre}</title>
+{verification()}{mesure()}  <title>{titre}</title>
   <meta name="description" content="{desc}" />
   <link rel="icon" type="image/svg+xml" href="{r}assets/favicon.svg" />
   <link rel="canonical" href="{BASE}{url}" />
@@ -1436,6 +1480,54 @@ def hub_tarifs():
     )
 
 
+# Pages ouvertes à l'index, dans l'ordre de l'arbre. Les trois pages légales
+# n'y figurent pas : elles portent un noindex, et un sitemap ne déclare que
+# des pages destinées à l'index.
+INDEXABLES = ["/", "/logiciel-de-caisse/", "/fonctionnalites/", "/nf525/", "/tarifs/"] + [
+    f"/logiciel-de-caisse/{s}/" for s in METIERS
+]
+
+
+def _derniere_modif(chemin):
+    """Date de dernière modification réelle d'un fichier, au format AAAA-MM-JJ.
+
+    C'est la date du dernier commit qui l'a touché — sauf si le fichier diffère
+    de HEAD, auquel cas il vient d'être régénéré et la date est aujourd'hui.
+    Un `lastmod` pris sur le mtime serait faux : le générateur réécrit les
+    treize fichiers à chaque passage, y compris ceux dont le contenu n'a pas
+    bougé d'un octet.
+    """
+    rel = str(chemin.relative_to(RACINE))
+    def git(*args):
+        r = subprocess.run(["git", "-C", str(RACINE), *args],
+                           capture_output=True, text=True)
+        return r.stdout.strip() if r.returncode == 0 else ""
+    if git("diff", "--name-only", "HEAD", "--", rel):
+        return datetime.date.today().isoformat()
+    return git("log", "-1", "--format=%ad", "--date=short", "--", rel) or \
+        datetime.date.today().isoformat()
+
+
+def sitemap():
+    """Écrit `sitemap.xml` à partir de la liste des pages indexables.
+
+    `changefreq` et `priority` sont omis : Google a confirmé les ignorer, et
+    des valeurs inventées ne font que donner du crédit à une donnée fausse.
+    """
+    lignes = []
+    for url in INDEXABLES:
+        f = RACINE / (url.strip("/") + "/index.html" if url != "/" else "index.html")
+        lignes.append(f"  <url>\n    <loc>{BASE}{url}</loc>\n"
+                      f"    <lastmod>{_derniere_modif(f)}</lastmod>\n  </url>")
+    texte = ('<?xml version="1.0" encoding="UTF-8"?>\n'
+             "<!-- Écrit par tools/build.py — ne pas modifier à la main.\n"
+             "     Les pages légales portent un noindex et n'y figurent pas. -->\n"
+             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+             + "\n".join(lignes) + "\n</urlset>\n")
+    (RACINE / "sitemap.xml").write_text(texte, encoding="utf-8")
+    return f"sitemap.xml ({len(INDEXABLES)} URL)"
+
+
 def synchroniser_accueil():
     """Réaligne l'en-tête de l'accueil sur `entete(0)`.
 
@@ -1473,6 +1565,17 @@ def synchroniser_accueil():
           <figcaption class="hero-badge">Ticket chaîné et horodaté automatiquement — prêt pour un contrôle fiscal</figcaption>
         </figure>""" + s[fin:]
 
+    # La balise Google, posée au même endroit que sur les pages générées.
+    # Idempotent : on ne réécrit que si la balise manque ou porte un autre
+    # identifiant — sinon un second passage empilerait les scripts.
+    d = s.find("  <!-- Google tag (gtag.js) -->")
+    if d > 0:
+        fin = s.index("</script>", s.index("</script>", d) + 9) + len("</script>\n")
+        s = s[:d] + mesure() + s[fin:]
+    else:
+        vp = '  <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n'
+        s = s.replace(vp, vp + mesure(), 1)
+
     # Les garanties de l'accueil, en bulles comme sur les pages métier.
     d = s.find('          <p class="hero-note">')
     if d > 0:
@@ -1493,6 +1596,7 @@ def main():
     faits = [hub_metiers(), hub_fonctionnalites(), hub_nf525(), hub_tarifs()]
     faits += [page_metier(s) for s in METIERS]
     faits.append(synchroniser_accueil())
+    faits.append(sitemap())
     for f in faits:
         print("écrit", f)
     print(f"\n{len(faits)} fichiers écrits.")
